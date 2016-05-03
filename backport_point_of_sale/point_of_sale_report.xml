@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<openerp>
+    <data>
+        <report id="report_user_label"
+            model="res.users" 
+            name="backport_point_of_sale.user.label"
+            string="User Labels"
+            xml="backport_point_of_sale/report/user_label.xml"
+            xsl="backport_point_of_sale/report/user_label.xsl"
+        />
+
+        <report
+            id="pos_invoice_report"
+            string="Invoice"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_invoice"
+            file="backport_point_of_sale.report_invoice"
+        />
+
+        <report
+            id="action_report_pos_receipt"
+            string="Receipt"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_receipt"
+            file="backport_point_of_sale.report_receipt"
+        />
+        <record id="action_report_pos_receipt" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="backport_point_of_sale.paperformat_posreceipt"/>
+        </record>
+
+        <report
+            id="pos_lines_report"
+            string="Sales Lines"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_saleslines"
+            file="backport_point_of_sale.report_saleslines"
+            auto="False"
+         />
+
+        <report
+            id="pos_lines_detail"
+            string="Details of Sales"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_detailsofsales"
+            file="backport_point_of_sale.report_detailsofsales"
+            menu="False"
+         />
+
+        <report
+            id="pos_payment_report"
+            string="Today's Payment"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_payment"
+            file="backport_point_of_sale.report_payment"
+         />
+
+        <report
+            id="action_report_pos_session_summary"
+            string="Session Summary"
+            model="pos.session"
+            report_type="qweb-pdf"
+            name="backport_point_of_sale.report_sessionsummary"
+            file="backport_point_of_sale.report_sessionsummary"
+         />
+    </data>
+</openerp>

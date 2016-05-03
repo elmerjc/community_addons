@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+
+    <t t-name="OrderlineWithOperations" t-extend="Orderline">
+        <t t-jquery="span.product-name" t-operation="append">
+            <button>Configure</button>
+        </t>
+        <t t-jquery="ul.info-list" t-operation="append">
+            <t t-foreach="line.get_product().operations" t-as="operation">
+                <li class="info operation">
+                    <t t-esc="operation.display_name"/>
+                    <t t-esc="widget.format_currency(operation.price)"/>
+                </li>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="SelectOperationPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-select-operation">
+                <div class="select-area">
+                    <p class="message"><t t-esc="widget.product.display_name"/></p>
+                    <ul class="select-operation">
+                        <li class="styled-select slate element">
+                            <select class="select-operation">
+                                <option value="choice">Select...</option>
+                                <t t-foreach="widget.categories" t-as="category">
+                                    <optgroup class="pos-categ" t-att-label="category.name">
+                                        <t t-foreach="category.operations" t-as="operation">
+                                            <option t-att-value="operation.id">
+                                                <t t-esc="operation.display_name"/>
+                                                <t t-esc="widget.format_currency(operation.price)"/>
+                                            </option>
+                                        </t>
+                                    </optgroup>
+                                </t>
+                            </select>
+                        </li>
+                        <li class="element">
+                            <button class="delete-operation"><i class="fa fa-times"/></button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer" style="height=20%">
+                    <div class="button ok">
+                        Add
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="XmlReceipt" t-extend="XmlReceipt">
+        <t t-jquery="line:has(t[t-esc='line.product_name'])" t-operation="after">
+            <t t-if="line.operations">
+                <t t-foreach="line.operations" t-as="operation">
+                    <line indent="1">
+                        <left>
+                            <t t-esc="operation_value.operation_display_name"/>
+                            <value><t t-esc="operation_value.operation_price"/></value>
+                        </left>
+                    </line>
+                </t>
+            </t>
+        </t>
+        <t t-jquery="receipt" t-operation="append">
+            <t t-set="index" t-value="0"/>
+            <t t-foreach="receipt.orderlines" t-as="line">
+                <t t-if="line.operations">
+                    <t t-set="index" t-value="index+1"/>
+                    <cut/>
+                    <div>
+                        <p>Manufacturing order n°</p>
+                        <p><t t-esc="line.lot_number"/></p>
+                        <br/>
+                        <barcode encoding="ean13"><t t-esc="line.ean13"/></barcode>
+                        <br/>
+                        <p>
+                            <left><t t-esc="line.product_name"/> X
+                                <value value-decimals="3" value-autoint="on">
+                                    <t t-esc="line.quantity"/>
+                                </value>
+                            </left>
+                        </p>
+                        <t t-foreach="line.operations" t-as="operation">
+                            <p>
+                                <left indent="1">
+                                    <t t-esc="operation_value.operation_display_name"/>
+                                </left>
+                            </p>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+
+</template>
