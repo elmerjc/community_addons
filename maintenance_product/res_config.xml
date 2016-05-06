@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_maintenance_product_configuration" model="ir.ui.view">
+            <field name="name">Maintenance Settings</field>
+            <field name="model">maintenance.config.settings</field>
+            <field name="inherit_id" ref="maintenance.view_maintenance_configuration"/>
+            <field name="arch" type="xml">
+            		<header position="after">
+            			<separator string="Accounting"/>
+	                    <group>
+	                    	<label for="id" string="Account Journal"/>
+	                        <div>
+	                            <div>
+	                                <label for="account_sale_journal"/>
+	                                <field name="account_sale_journal" class="oe_inline"/>
+	                            </div>
+	                        </div>
+	                    </group>
+                    </header>
+           	</field>
+        </record>
+    </data>
+</openerp>

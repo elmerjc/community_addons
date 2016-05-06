@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- ELEMENT TYPE VIEWS -->
+	
+		<record id="view_maintenance_element_type_form" model="ir.ui.view">
+			<field name="name">maintenance.element.type.form</field>
+			<field name="model">maintenance.element.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Maintenance element type">
+					<group>
+						<field name="name" />
+					</group>
+				</form>
+			</field>
+		</record>
+			
+		<record id="action_maintenance_element_type" model="ir.actions.act_window">
+			<field name="name">Maintenance element type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.element.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		<menuitem action="action_maintenance_element_type" id="menu_maintenance_element_type"
+			parent="maintenance.menu_maintenance_config" />
+			
+
+		<!-- MAINTENANCE ELEMENT VIEW -->
+		<record id="view_maintenance_element_form_element_type" model="ir.ui.view">
+			<field name="name">maintenance.element.form.element.type</field>
+			<field name="inherit_id" ref="maintenance.view_maintenance_element_form" />
+			<field name="model">maintenance.element</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="element_type_id" />
+				</field>
+			</field>
+		</record>
+		
+		
+		<!-- MAINTENANCE INSTALLATION VIEW -->
+		<record id="view_maintenance_installation_form_element_type" model="ir.ui.view">
+			<field name="name">maintenance.installation.form.element.type</field>
+			<field name="inherit_id" ref="maintenance.view_maintenance_installation_form" />
+			<field name="model">maintenance.installation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='elements']/form/group/group/field[@name='name']" position="after">
+					<field name="element_type_id" />
+				</xpath>
+			</field>
+		</record>
+				
+	</data>
+</openerp>

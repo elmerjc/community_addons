@@ -1,0 +1,257 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* product_unique_serial
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-06 23:58+0000\n"
+"PO-Revision-Date: 2015-11-06 23:58+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_stock_change_product_qty
+msgid "Change Product Quantity"
+msgstr "Cambiar cantidad producto"
+
+#. module: product_unique_serial
+#: help:product.template,lot_unique_ok:0
+msgid "Forces set qty=1 to specify a Unique Serial Number for all moves"
+msgstr "Forzar cantidad=1 para especificar un Único Número de Serie para todos los movimientos"
+
+#. module: product_unique_serial
+#: model:product.template,name:product_unique_serial.product_demo_1_product_template
+msgid "Huawei Ascend"
+msgstr "Huawei Ascend"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_stock_inventory_line
+msgid "Inventory Line"
+msgstr "Línea inventario"
+
+#. module: product_unique_serial
+#: field:stock.production.lot,last_location_id:0
+msgid "Last Location"
+msgstr "Última ubicación"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Lote/Nº de serie"
+
+#. module: product_unique_serial
+#: model:product.template,name:product_unique_serial.product_demo_2_product_template
+msgid "Nokia 2630"
+msgstr "Nokia 2630"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_stock_transfer_details
+msgid "Picking wizard"
+msgstr "Asistente de albarán"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_product_template
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: product_unique_serial
+#: model:ir.model,name:product_unique_serial.model_stock_quant
+msgid "Quants"
+msgstr "Quants"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:140
+#: code:addons/product_unique_serial/wizard/stock_change_product_qty.py:21
+#, python-format
+msgid "The product %s has active \"Full Lots Traceability\", you must assign the serial number to update the quantity."
+msgstr "El producto %s tiene activado \"Trazabilidad completa de lotes\", se necesita asignar el número de serie para actualizar la cantidad."
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:120
+#, python-format
+msgid "The product %s has active unique lot and you try set %s in the lot %s.\n"
+"Remmember:\n"
+" %s"
+msgstr "El producto %s tiene activado lote unico y se esta intentando colocar %s en el lote %s.\n"
+"Recuerda:\n"
+" %s"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:127
+#, python-format
+msgid "The product %s has active unique lot and you try set more products in the same lot %s.\n"
+"Remmember:\n"
+" %s"
+msgstr "El producto %s tiene activado lote unico y se estan intentando colocar varios productos en el mismo lote %s.\n"
+"Recuerda:\n"
+" %s"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:94
+#, python-format
+msgid "The serial number %s can only belong to a single product in stock"
+msgstr "El número de serie %s solo puede pertenecer a un producto en existencia"
+
+#. module: product_unique_serial
+#: field:product.template,lot_unique_ok:0
+msgid "Unique lot"
+msgstr "Lote único"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:107
+#, python-format
+msgid "When you select a serial number (lot), the quantity is corrected with respect to\n"
+"the quantity of that serial number (lot) and not to the total quantity of the product."
+msgstr "uando selecciona un nº de serie (lote), la cantidad se corrige con respecto a la\n"
+"cantidad de ese nº de serie (lote), y no de la cantidad total del producto."
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/product.py:43
+#, python-format
+msgid "You can't activate 'full lots traceability' or 'unique lot' in the product %s because this product already have stock movements."
+msgstr "No se puede activar 'Trazabilidad completa de lotes' o 'Lote unico' en el producto %s porque este producto ya tiene movimientos de existencias."
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/model/stock.py:66
+#, python-format
+msgid "You should only receive by the piece with the same serial number"
+msgstr "Solo se puede recibir una pieza con el mismo número de serie"
+
+#. module: product_unique_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+msgid "Add Serial"
+msgstr "Agrega Serial"
+
+#. module: product_unique_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: product_unique_serial
+#: field:stock.serial,create_uid:0
+#: field:stock.serial.line,create_uid:0
+msgid "Created by"
+msgstr ""
+
+#. module: product_unique_serial
+#: field:stock.serial,create_date:0
+#: field:stock.serial.line,create_date:0
+msgid "Created on"
+msgstr ""
+
+#. module: product_unique_serial
+#: field:stock.serial,id:0
+#: field:stock.serial.line,id:0
+msgid "ID"
+msgstr ""
+
+#. module: product_unique_serial
+#: field:stock.serial,write_uid:0
+#: field:stock.serial.line,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_unique_serial
+#: field:stock.serial,write_date:0
+#: field:stock.serial.line,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_unique_serial
+#: field:stock.serial.line,lot_id:0
+msgid "Lot/Serial Number"
+msgstr "Numero Serial"
+
+#. module: product_unique_serial
+#: field:stock.serial,move_id:0
+msgid "Move"
+msgstr "Movimiento"
+
+#. module: product_unique_serial
+#: field:stock.serial,product_id:0
+msgid "Product"
+msgstr "Producto"
+
+#. module: product_unique_serial
+#: field:stock.serial,product_qty:0
+msgid "Qty"
+msgstr "Cantidad"
+
+#. module: product_unique_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+#: field:stock.serial.line,serial:0
+#: field:stock.serial.line,serial_id:0
+msgid "Serial"
+msgstr "Serial"
+
+#. module: product_unique_serial
+#: view:stock.move:product_unique_serial.view_move_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+msgid "Serial Products"
+msgstr "Serial de Productos"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/wizard/stock_serial.py:193
+#, python-format
+msgid "Serial {} not found"
+msgstr "Numero de Serial {} No Encontrado"
+
+#. module: product_unique_serial
+#: field:stock.serial,serial_ids:0
+msgid "Serials"
+msgstr "Seriales"
+
+#. module: product_unique_serial
+#: model:ir.actions.act_window,name:product_unique_serial.move_serial
+msgid "Stock Serial"
+msgstr "Stock Serial"
+
+#. module: product_unique_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+msgid "of"
+msgstr "De"
+
+#. module: product_unique_serial
+#: view:stock.serial:product_unique_serial.view_stock_serial
+msgid "or"
+msgstr ""
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/wizard/stock_serial.py:91
+#, python-format
+msgid "The Serial number {} already captured"
+msgstr "El numero serial {} ya fue capturado"
+
+#. module: product_unique_serial
+#: help:stock.picking.type,use_create_lots:0
+msgid "If this is checked only, it will suppose you want to create new Serial Numbers / Lots, so you can provide them in a text field. "
+msgstr "SI este campo es seleccionado, supondrá que quieres crear nuevos números  de serie, entonces tu puedes proporcionarlos en un campo de texto"
+
+#. module: product_unique_serial
+#: help:stock.picking.type,use_existing_lots:0
+msgid "If this is checked, you will be able to choose the Serial Number / Lots. "
+msgstr "SI este campo esta seleccionado, tu podrás seleccionar el numero de serie"
+
+#. module: product_unique_serial
+#: field:stock.picking.type,use_create_lots:0
+msgid "Create New Lots"
+msgstr "Crear nuevo serial"
+
+#. module: product_unique_serial
+#: field:stock.picking.type,use_existing_lots:0
+msgid "Use Existing Lots"
+msgstr "Usar serial existente"
+
+#. module: product_unique_serial
+#: code:addons/product_unique_serial/wizard/stock_serial.py:185
+#, python-format
+msgid "The serial number {} is already in stock"
+msgstr "El numero serial {} ya esta en almacén"
+
+

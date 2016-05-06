@@ -1,0 +1,10 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_maint_element_maintenance_user","maintenance.element","model_maintenance_element","maintenance.group_maintenance_user",1,1,1,1
+"access_maint_element_sale_salesman","maintenance.element","model_maintenance_element","base.group_sale_salesman",1,1,1,1
+"access_maint_installation_maintenance_user","maintenance.installation","model_maintenance_installation","maintenance.group_maintenance_user",1,1,1,1
+"access_maint_installation_sale_salesman","maintenance.installation","model_maintenance_installation","base.group_sale_salesman",1,1,1,1
+"access_maint_intervention_maintenance_user","maintenance.intervention","model_maintenance_intervention","maintenance.group_maintenance_user",1,1,1,1
+"access_maint_intervention_sale_salesman","maintenance.intervention","model_maintenance_intervention","base.group_sale_salesman",1,1,1,1
+"access_maint_intervention_type_maintenance_user","maintenance.intervention.type","model_maintenance_intervention_type","maintenance.group_maintenance_user",1,1,1,1
+"access_maint_intervention_type_sale_salesman","maintenance.intervention.type","model_maintenance_intervention_type","base.group_sale_salesman",1,1,1,1
+"access_maint_intervention_task_user","maintenance.intervention.task","model_maintenance_intervention_task","maintenance.group_maintenance_user",1,1,1,1

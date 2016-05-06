@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- MAIN MAINTENANCE MENU -->
+		<menuitem id="menu_maintenance" name="Maintenance"
+			sequence="30" groups="group_maintenance_user" />
+			
+		<!-- MAINTENANCE CONFIGURATION MENU -->
+		<menuitem id="menu_maintenance_config" parent="menu_maintenance" 
+			name="Configuration" sequence="20" groups="group_maintenance_user" />
+			
+		<menuitem id="menu_maintenance_intervention" parent="menu_maintenance" 
+			name="Interventions" sequence="1" groups="group_maintenance_user" />
+		<menuitem id="menu_maintenance_installation" parent="menu_maintenance" 
+			name="Installations" sequence="2" groups="group_maintenance_user" />
+			
+			
+		<record id="view_maintenance_intervention_type_form" model="ir.ui.view">
+			<field name="name">maintenance.intervention.type.form</field>
+			<field name="model">maintenance.intervention.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Maintenance intervention type">
+					<sheet>
+						<h1>
+							<label string="Type : "/><field name="name" class="oe_inline"/>
+						</h1>
+						<group>
+							<field name="workforce_product_id" />
+							<field name="workforce_product_duration" widget="float_time" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+			
+		<record id="action_maintenance_intervention_type" model="ir.actions.act_window">
+			<field name="name">Intervention Type</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.intervention.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+		 <record id="view_maintenance_internal_search" model="ir.ui.view">
+            <field name="name">maintenance.intervention.internal.search</field>
+            <field name="model">maintenance.intervention</field>
+            <field name="arch" type="xml">
+                <search string="Interventions">
+                	<field name="name" string="Intervention" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Interventions"/>
+                    <filter name="confirmed" string="Confirmed" domain="[('state','=', 'confirmed')]" help="Confirmed Interventions"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]" help="Interventions done"/>
+                    <separator/>
+                    <filter name="late" string="Late" domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d %%H:%%M:%%S')),('state','=','confirmed')]" help="Interventions that are late on scheduled time"/>
+                    <field name="maint_type"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Technician" icon="terp-personal" domain="[]" context="{'group_by':'technicians'}"/>
+                        <filter string="Installation" icon="terp-product" domain="[]" context="{'group_by':'installation_id'}"/>
+                        <filter string="Address" icon="terp-personal+" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'maint_type'}"/>
+                        <filter string="Task state" domain="[]" context="{'group_by':'task_state'}"/>
+                    </group>
+                </search>
+             </field>
+       	</record>
+       	
+       	<record id="action_maintenance_tree_draft" model="ir.actions.act_window">
+            <field name="name">Draft Interventions</field>
+            <field name="res_model">maintenance.intervention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_maint_type': [active_id],
+                    'default_maint_type': active_id,
+                    'search_default_draft': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_maintenance_internal_search"/>
+        </record>
+		
+		<record id="action_maintenance_tree_confirmed" model="ir.actions.act_window">
+            <field name="name">Confirmed Interventions</field>
+            <field name="res_model">maintenance.intervention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_maint_type': [active_id],
+                    'default_maint_type': active_id,
+                    'search_default_confirmed': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_maintenance_internal_search"/>
+        </record>
+        
+        
+        <record id="action_maintenance_tree" model="ir.actions.act_window">
+            <field name="name">All Interventions</field>
+            <field name="res_model">maintenance.intervention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_maint_type': [active_id],
+                    'default_maint_type': active_id,
+            }
+            </field>
+            <field name="search_view_id" ref="view_maintenance_internal_search"/>
+        </record>
+        
+        <record id="action_maintenance_tree_done" model="ir.actions.act_window">
+            <field name="name">Interventions done</field>
+            <field name="res_model">maintenance.intervention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_maint_type': [active_id],
+                    'default_maint_type': active_id,
+                    'search_default_done': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_maintenance_internal_search"/>
+        </record>
+        
+        <record id="action_maintenance_tree_late" model="ir.actions.act_window">
+            <field name="name">Interventions late</field>
+            <field name="res_model">maintenance.intervention</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_maint_type': [active_id],
+                    'default_maint_type': active_id,
+                    'search_default_late': 1,
+            }
+            </field>
+            <field name="search_view_id" ref="view_maintenance_internal_search"/>
+        </record>
+		
+		<record id="stock_maintenance_type_kanban" model="ir.ui.view">
+            <field name="name">maintenance.int.type.kanban</field>
+            <field name="model">maintenance.intervention.type</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey" create="0">
+                	<field name="name"/>
+                	<field name="color"/>
+                	<field name="count_maintenance_draft"/>
+                	<field name="count_maintenance_confirmed"/>
+                	<field name="count_maintenance_late"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_stock_picking_type">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="maintenance.group_maintenance_manager">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><ul class="oe_kanban_colorpicker" data-field="color"/></li></t>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4 class="text-center"><strong><field name="name"/></strong></h4>
+
+                                    <div class="oe_right">
+                                        
+                                    </div>
+                                    <div class="oe_items_list oe_kanban_ellipsis">
+                                        <div>
+                                            <a name="%(action_maintenance_tree_confirmed)d" type="action">
+                                                <field name="count_maintenance_confirmed"/> Confirmed
+                                            </a>
+                                            <a name="%(action_maintenance_tree_done)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="last_done_maintenance" widget="sparkline_bar" options="{'type': 'tristate', 'colorMap': {'0': 'orange', '-1': 'red', '1': 'green'}}">Last 10 Done Interventions</field>
+                                            </a>
+                                        </div>
+                                        <div t-if="record.count_maintenance_draft.raw_value &gt; 0">
+                                            <a name="%(action_maintenance_tree_draft)d" type="action">
+                                                <field name="count_maintenance_draft"/> Draft
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(action_maintenance_tree)d" type="action">All Interventions</a>
+                                        </div>
+                                    </div>
+                                    <div class="oe_picking_type_gauge" style="text-align:center;margin-top:10px;">
+                                        <field name="rate_maintenance_late" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_maintenance_tree_late)d'}">Late (%%)</field>
+                                        <div class="oe_gauge_labels">
+                                            <div class="oe_gauge_label_column">
+                                                <a name="%(action_maintenance_tree_late)d" type="action">
+                                                    <field name="count_maintenance_late"/> Late
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_maintenance_type_form" model="ir.actions.act_window">
+            <field name="name">Interventions (By Type)</field>
+            <field name="res_model">maintenance.intervention.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new intervention type. 
+              </p><p>
+              	The maintenance intervention type system allows you to
+              	assign interventions to a kind that will alter its views
+              	accordingly.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem
+            action="action_maintenance_type_form"
+            id="menu_action_maintenance_type_form"
+            parent="menu_maintenance_intervention" sequence="2"/>
+		
+		<menuitem action="action_maintenance_intervention_type" id="menu_maintenance_intervention_type"
+			parent="menu_maintenance_config" sequence="5"/>
+
+		<!-- MAINTENANCE ELEMENTS -->
+		<record id="search_maintenance_element" model="ir.ui.view">
+			<field name="name">maintenance.element.search</field>
+			<field name="model">maintenance.element</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Maintenance Elements">
+					<field name="installation_id" />
+					<field name="code" />
+					<field name="name" />
+					<field name="serial_number" />
+					<field name="partner_id" />
+					<field name="address_id" />
+					<field name="product_id" />
+					<field name="installation_date" />
+					<field name="warranty_date" />
+					<field name="warehouse_id" widget="selection" />
+					<newline/>
+                    <group expand="0" string="Group By...">
+                    	<filter string="Installation"
+                            domain="[]" context="{'group_by':'installation_id'}" />
+                        <filter string="Customer"
+                            domain="[]" context="{'group_by':'partner_id'}" />
+                        
+                    </group>
+				</search>
+			</field>
+		</record>
+
+
+		<record id="action_maintenance_element" model="ir.actions.act_window">
+			<field name="name">Elements</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.element</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help">All maintenance elements</field>
+		</record>
+		<menuitem action="action_maintenance_element" id="menu_maintenance_element"
+			parent="menu_maintenance_installation" sequence="20"/>
+			
+		<record id="view_maintenance_element_tree" model="ir.ui.view">
+			<field name="name">maintenance.element.tree</field>
+			<field name="model">maintenance.element</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Maintenance Element">
+					<field name="installation_id" />
+					<field name="code" />
+					<field name="name" />
+					<field name="serial_number" />
+					<field name="partner_id" />
+					<field name="address_id" />
+					<field name="product_id" />
+					<field name="installation_date" />
+					<field name="warranty_date" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_maintenance_element_form" model="ir.ui.view">
+			<field name="name">maintenance.element.form</field>
+			<field name="model">maintenance.element</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Maintenance Element">
+					<sheet>
+						<h1>
+	                        <label for="code" class="oe_edit_only" string="Reference"/>
+	                        <field name="code" class="oe_inline"/>
+	                    </h1>
+	                    <div class="oe_right oe_button_box" name="button_box">
+	                    </div>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="installation_id" />
+								<field name="active" />
+							</group>
+							<group>
+								<field name="installation_date" />
+								<field name="warranty_date" />
+								<field name="location" />
+							</group>
+						</group>
+						<notebook>
+							<page string="Product">
+								<separator string="Product"/>
+								<group>
+									<field name="product_id" />
+									<field name="serialnumber_required" />
+									<field name="serial_number" />
+								</group>
+								<group>
+									<field name="description" colspan="4" />
+								</group>
+							</page>
+							<page string="Contact">
+								<separator string="Contact Information"/>
+								<group>
+									<field name="partner_id" />
+									<field name="address_id" domain="[('parent_id','=',partner_id)]" />
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+                	</div>
+				</form>
+			</field>
+		</record>
+
+		<!-- MAINTENANCE INSTALLATION -->
+
+		<record id="search_maintenance_installation" model="ir.ui.view">
+			<field name="name">maintenance.installation.search</field>
+			<field name="model">maintenance.installation</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Maintenance installations">
+					<field name="code" />
+					<field name="name" />
+					<field name="address_id" />
+					<field name="partner_id" />
+					<field name="contact_address_id" />
+					<field name="warehouse_id" />
+					<field name="state" />
+					<filter string="Active"
+                            domain="[('state','=','active')]" />
+                    <filter string="Inactive"
+                            domain="[('state','=','inactive')]" />
+					<group expand="0" string="Group By...">
+                        <filter string="Customer"
+                            domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter string="Warehouse"
+                            domain="[]" context="{'group_by':'warehouse_id'}" />
+                    </group>
+				</search>
+			</field>
+		</record>
+
+		<record id="action_maintenance_installation" model="ir.actions.act_window">
+			<field name="name">Installations</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.installation</field>
+			<field name="context">{"search_default_state":'active'}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help">All maintenance installations</field>
+		</record>
+
+		<menuitem action="action_maintenance_installation" id="menu_maintenance_installation_installation"
+			parent="menu_maintenance_installation" sequence="15"/>
+			
+		<record id="view_maintenance_installation_tree" model="ir.ui.view">
+			<field name="name">maintenance.installation.tree</field>
+			<field name="model">maintenance.installation</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Maintenance installation">
+					<field name="code" />
+					<field name="name" />
+					<field name="address_id" />
+					<field name="partner_id" />
+					<field name="warehouse_id" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_maintenance_installation_form" model="ir.ui.view">
+			<field name="name">maintenance.installation.form</field>
+			<field name="model">maintenance.installation</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Installation">
+					<header>
+						<button name="installation_active" string="Activate" type="object" states="inactive" groups="maintenance.group_maintenance_manager" class="oe_highlight"/>
+						<button name="installation_inactive" string="Deactivate" type="object" states="active" groups="maintenance.group_maintenance_manager" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="active,inactive"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+	                    	<label for="code" string="Reference" class="oe_edit_only"/>
+                        	<h1><field name="code"/></h1>
+	                    </div>
+	                    <div class="oe_right oe_button_box">
+	                    </div>
+						<group>
+							<group>
+								<field name="name" />
+								<field name="partner_id"/>
+								<field name="warehouse_id" widget="selection" />
+							</group>
+						<group>
+						
+						<field name="address_id" domain="[('parent_id','=',partner_id), ('type','in', ('default','delivery'))]" />
+						<field name="invoice_address_id" domain="[('parent_id','=',partner_id), ('type','in', ('default','invoice'))]" />
+						<field name="contact_address_id" domain="[('type','in', ('default','contact'))]" />
+						</group>
+						</group>
+						
+						<!-- <field name="active" /> -->
+						<newline />
+						<notebook colspan="4">
+							<page string="Content">
+								<separator string="Elements" colspan="4" />
+								<field name="elements" nolabel='1' colspan="4">
+									<tree string="Maintenance Element">
+										<field name="code" />
+										<field name="name" />
+										<field name="serial_number" />
+										<field name="product_id" />
+										<field name="installation_date" />
+										<field name="warranty_date" />
+									</tree>
+									
+									<form string="Maintenance Element">
+										<group>
+	
+										<group>
+											<field name="code" />
+											<field name="name" />
+											<field name="active" />
+										</group>
+	
+										<group>
+											<field name="installation_date" />
+											<field name="warranty_date" />
+											<field name="location" />
+										</group>
+										</group>
+										<separator string="Product"/>
+										<group>
+											<field name="product_id" />
+											<field name="serialnumber_required" />
+											<field name="serial_number" />
+										</group>
+										<group>
+											<field name="description" colspan="4" />
+										</group>
+										<separator string="Contact Information"/>
+										<group>
+											<field name="partner_id" />
+											<field name="address_id" domain="[('parent_id','=',partner_id)]" />
+										</group>
+										
+										<!-- <field name="suivi_tmi" colspan="4" /> -->
+									</form>
+								</field>
+							</page>
+							<page string="History">
+								<separator string="Interventions" colspan="4" />
+								<field name="interventions" nolabel='1' colspan="4" />
+							</page>
+							<page string="Additional Information">
+								<separator string="Notes" />
+								<field name="note" />
+							</page>
+						</notebook>
+					</sheet>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+	                </div>
+				</form>
+			</field>
+		</record>
+
+
+		<!-- MAINTENANCE INTERVENTION -->
+		<record id="view_maintenance_intervention_search" model="ir.ui.view">
+            <field name="name">maintenance.intervention.search</field>
+            <field name="model">maintenance.intervention</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Interventions">
+                    <group col="8" colspan="4">
+
+                        <field name="code" />
+						<field name="name" />
+						<field name="installation_id" />
+						<field name="technicians" />					
+						<field name="address_id" />
+						<field name="partner_id" />
+						<field name="state" />
+						<field name="task_state" />
+						<!--  <field name="sale_order_id" />-->
+                    </group>
+                    <group string="Filter">
+                    	<filter name="message_unread" string="My Interventions confirmed" domain="['&amp;', ('tasks.user_id.id','=',uid),('state', '=', 'confirmed')]" help="Interventions that have tasks assigned to me and state in confirmed"/>
+                    	<filter name="to_confirm" string="To confirm" domain="[('state','=','draft')]" help="Interventions that have state in draft"/>
+                    	<filter name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Interventions that have state in confirmed"/>
+                        <filter name="done" string="Finished" domain="[('state','=','done')]" help="Interventions that have state in done"/>
+                    </group>
+                    <group expand="0" string="Group By...">
+                        <filter string="Technician" icon="terp-personal" domain="[]" context="{'group_by':'technicians'}"/>
+                        <filter string="Installation" icon="terp-product" domain="[]" context="{'group_by':'installation_id'}"/>
+                        <filter string="Warehouse" domain="[]" context="{'group_by':'installation_warehouse_id'}"/>
+                        <filter string="Address" icon="terp-personal+" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'maint_type'}"/>
+                        <filter string="Task state" domain="[]" context="{'group_by':'task_state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+		<record id="action_maintenance_intervention" model="ir.actions.act_window">
+			<field name="name">Interventions</field>
+			<field name="search_view_id" ref="view_maintenance_intervention_search" />
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.intervention</field>
+			<field name="context">{'maintenance_intervention':True}</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="context">{'search_default_future': 1}</field>
+			<field name="help">All maintenance interventions</field>
+		</record>
+
+		<menuitem action="action_maintenance_intervention" id="menu_maintenance_intervention_intervention"
+			parent="menu_maintenance_intervention" sequence="1"/>
+
+		<record id="view_maintenance_intervention_tree" model="ir.ui.view">
+			<field name="name">maintenance.intervention.tree</field>
+			<field name="model">maintenance.intervention</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Maintenance intervention">
+					<field name="code" />
+					<field name="maint_type" />
+					<field name="time_planned" />
+					<field name="date_scheduled" />
+					<field name="technicians" />
+					<field name="installation_id" />
+					<field name="contact_phone" />
+					<field name="date_start" />
+					<field name="state" />
+					<field name="name" />
+					<field name="address_id" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_maintenance_intervention_form" model="ir.ui.view">
+			<field name="name">maintenance.intervention.form</field>
+			<field name="model">maintenance.intervention</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Intervention">
+					<header>
+						<button name="action_cancel" type="object" string="Cancel" states="draft,confirmed" groups="maintenance.group_maintenance_manager"/>
+						<button name="action_confirm" type="object" string="Confirm" states="draft" groups="maintenance.group_maintenance_manager" class="oe_highlight"/>
+						<button name="action_done" type="object" string="Done" states="confirmed" class="oe_highlight"/>
+						<button name="print_intervention" string="Print" type="object" class="oe_highlight" groups="maintenance.group_maintenance_user"/>
+						<button name="print_installation" string="Print Installation" type="object" groups="maintenance.group_maintenance_user"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"confirmed":"blue"}'/>
+					</header>
+					<sheet>
+						<h1>
+							<label class="oe_edit_only" for="code" string="Reference"/>
+							<field name="code" class="oe_inline"/>
+						</h1>
+						<div class="oe_right oe_button_box">
+	                    </div>
+						<group>
+							<group>
+								<field name="maint_type" widget="selection" />
+								<field name="date_scheduled" />
+								<field name="date_start" />
+								<field name="date_end" />
+								<field name="time_planned" widget="float_time" />
+								<field name="to_plan" invisible="1" />
+							</group>
+							<group>	
+								<field name="installation_id"/>
+								<field name="partner_id" invisible="1"/>
+								<field name="contact_address_id" context="{'search_default_parent_id':partner_id}"/>
+							</group>
+							<group>
+									<separator string="Description" colspan="2"/>
+									<field name="name" nolabel="1"/>
+								</group>
+						</group>
+						<notebook colspan="4">
+							<page string="Achievement">
+								<newline />
+								<separator string="Tasks" colspan="4" />
+								<field name="tasks" colspan="4" nolabel="1">
+									<form>
+										<separator string="Task" colspan="4" />
+										<group>
+											<field name="user_id" string="Technician" />
+											<field name="name" />
+										</group>
+										<separator string="Scheduling" colspan="4" />
+										<group>
+											<field name="date_start" string="Beginning of task" />
+											<field name="planned_hours" string="Planned/worked hours" widget="float_time" />
+											<field name="date_end" string="End of task" />
+											<field name="break_time" widget="float_time" />
+										</group>
+									</form>
+									<tree string="Tasks">
+										<field name="user_id" string="Technician" />
+										<field name="name" />
+										<field name="date_start" string="Beginning of task" />
+										<field name="date_end" string="End of task" />
+										<field name="break_time" widget="float_time" />
+										<field name="planned_hours" string="Planned/worked hours" widget="float_time" />
+									</tree>
+								</field>
+							</page>
+							<page string="Comments">
+								<separator string="External comment" colspan="4"/>
+								<field name="ext_comment" colspan="4" nolabel="1"/>							
+								<newline/>
+								<group colspan="2" col="2">
+									<separator string="Internal comment" colspan="2"/>
+									<field name="int_comment" colspan="2" nolabel="1"/>
+								</group>
+							</page>
+						</notebook>
+						<group>
+							<field name="task_state"/>
+						</group>
+						<div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+		                </div>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="view_maintenance_intervention_calendar" model="ir.ui.view">
+            <field name="name">maintenance.intervention.calendar</field>
+            <field name="model">maintenance.intervention</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="maint_type" date_start="date_start" date_stop="date_end" string="Intervention">
+                	<field name="code"/>
+                    <field name="name"/>
+                    <field name="maint_type"/>
+                </calendar>
+            </field>
+        </record>
+        
+        <!--  TASKS -->
+        
+        <record id="view_maintenance_intervention_task_search" model="ir.ui.view">
+            <field name="name">maintenance.intervention.task.search</field>
+            <field name="model">maintenance.intervention.task</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tasks">
+                    <group col="8" colspan="4">
+
+                        <field name="intervention_id" />
+                        <field name="partner_id"/>
+						<field name="user_id" />
+						<field name="date_start" />
+						<field name="date_end" />					
+						<!--  <field name="sale_order_id" />-->
+                    </group>
+                    <group string="Filter">
+                    	<filter name="message_unread" string="My tasks planned" domain="['&amp;', ('tasks.user_id.id','=',uid),('to_plan', '=', False)]" help="Interventions that have tasks assigned to me and state in confirmed"/>
+                    	<filter name="to_plan" string="To plan" domain="[('to_plan','=',True)]" help="Tasks to plan"/>
+                    </group>
+                    <group string="Affectation">
+                    	<filter name="not_affected" string="Not Affected" domain="[('user_id','=',False)]"/>
+                    	<filter name="affected" string="Affected" domain="[('user_id','!=',False)]"/>
+                    </group>
+                    <group expand="0" string="Group By...">
+                        <filter string="Technician" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Installation" domain="[]" context="{'group_by':'installation_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="view_maintenance_intervention_tasks_tree" model="ir.ui.view">
+			<field name="name">maintenance.intervention.tasks.tree</field>
+			<field name="model">maintenance.intervention.task</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Maintenance intervention tasks">
+					<field name="name" />
+					<field name="user_id" />
+					<field name="intervention_id" />
+					<field name="date_start" />
+					<field name="date_end" />
+					<field name="to_plan" />
+				</tree>
+			</field>
+		</record>
+		<record id="view_maintenance_intervention_task_form" model="ir.ui.view">
+			<field name="name">maintenance.intervention.task.form</field>
+			<field name="model">maintenance.intervention.task</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Task">
+					<sheet>
+						
+						<div class="oe_right oe_button_box">
+	                    </div>
+						<group>
+							<group>
+								<field name="intervention_id" />
+								<field name="user_id" />
+								<field name="date_start" />
+								<field name="date_end" />
+								<field name="to_plan"/>
+							</group>
+							
+						</group>
+						<div class="oe_chatter">
+		                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+		                    <field name="message_ids" widget="mail_thread"/>
+		                </div>
+	                </sheet>
+				</form>
+			</field>
+		</record>
+        
+        
+        <record id="view_maintenance_intervention_tasks_calendar" model="ir.ui.view">
+            <field name="name">maintenance.intervention.tasks.calendar</field>
+            <field name="model">maintenance.intervention.task</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_start" date_stop="date_end" string="Task">
+                    <field name="user_id"/>
+                    <field name="planned_hours"/>
+                    <field name="name"/>
+                    <field name="message_summary"/>
+                    <field name="installation_id"/>
+                    <field name="intervention_id"/>
+                </calendar>
+            </field>
+        </record>
+        <record id="action_maintenance_intervention_tasks" model="ir.actions.act_window">
+			<field name="name">Tasks</field>
+			<field name="search_view_id" ref="view_maintenance_intervention_task_search" />
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintenance.intervention.task</field>
+			<!-- <field name="context">{'maintenance_intervention':True}</field> -->
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="context">{'search_default_affected': 1}</field>
+			<field name="domain">[('intervention_id','!=',False),('to_plan','=',True)]</field>
+			<field name="help">All maintenance interventions tasks</field>
+		</record>
+        
+        <menuitem action="action_maintenance_intervention_tasks" id="menu_maintenance_intervention_tasks"
+			parent="menu_maintenance_intervention" sequence="2"/>
+	</data>
+</openerp>

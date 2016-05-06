@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+       <record id="view_stock_serial" model="ir.ui.view">
+            <field name="name">Stock Serial</field>
+            <field name="model">stock.serial</field>
+            <field name="arch" type="xml">
+                <form string="Serial Products">
+                    <field name="move_id" invisible="1"/>
+                    <field name="product_id"/>
+                    <span>
+                        <field name="product_qty_done" readonly="1"/> of
+                        <field name="product_qty"/>
+                    </span>
+                    <field name="serial_ids" context="{'move_id': move_id}">
+                        <tree string="Serial" editable="bottom">
+                            <field name="serial"/>
+                            <field name="lot_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="move_serial" string="Add Serial" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="move_serial" model="ir.actions.act_window">
+            <field name="name">Stock Serial</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.serial</field>
+            <field name="view_id" ref="view_stock_serial"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'form_view_ref': False}</field>
+        </record>
+
+        <record id="view_picking_type_serial" model="ir.ui.view">
+            <field name="name">view.picking.type.serial</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.view_picking_type_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_location_dest_id']" position="after">
+                        <group string="Lots">
+                        <field name="use_existing_lots" groups="stock.group_production_lot"/>
+                        <field name="use_create_lots" groups="stock.group_production_lot"/>
+                        </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_serial" model="ir.ui.view">
+            <field name="name">view.move.serial</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="lot_unique" invisible="1"/>
+                    <button name="%(move_serial)d"
+                        string="Serial Products" type="action"
+                        icon="STOCK_JUSTIFY_FILL"
+                        attrs="{'invisible':[('lot_unique', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

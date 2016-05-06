@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="workflow" id="wkf_maintenance_installation">
+			<field name="name">maintenance_installation.wkf</field>
+			<field name="osv">maintenance.installation</field>
+			<field name="on_create" eval="True"/>
+		</record>
+	
+		<record model="workflow.activity" id="act_maintenance_installation_active">
+			<field name="wkf_id" ref="wkf_maintenance_installation"/>
+			<field name="name">active</field>
+			<field name="flow_start">True</field>
+			<field name="kind">function</field>
+			<field name="action">installation_active()</field>
+		</record>
+
+		<record model="workflow.activity" id="act_maintenance_installation_inactive">
+			<field name="wkf_id" ref="wkf_maintenance_installation"/>
+			<field name="name">inactive</field>
+			<field name="kind">function</field>
+			<field name="action">installation_inactive()</field>
+		</record>
+		
+		<record model="workflow.transition" id="trans_maintenance_installation_inactive_active">
+			<field name="act_from" ref="act_maintenance_installation_inactive"/>
+			<field name="act_to" ref="act_maintenance_installation_active"/>
+			<field name="signal">installation_active</field>
+		</record>
+		
+		<record model="workflow.transition" id="trans_maintenance_installation_active_inactive">
+			<field name="act_from" ref="act_maintenance_installation_active"/>
+			<field name="act_to" ref="act_maintenance_installation_inactive"/>
+			<field name="signal">installation_inactive</field>
+		</record>
+	</data>
+</openerp>

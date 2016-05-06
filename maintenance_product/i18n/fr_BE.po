@@ -1,0 +1,235 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_followup_advanced
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-02 12:00+0000\n"
+"PO-Revision-Date: 2015-06-02 14:24+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_BE\n"
+"X-Generator: Poedit 1.8.1\n"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:116
+#, python-format
+msgid "%s partners have no credits and as such the action is cleared"
+msgstr "%s partenaires n'ont plus de crédit et l'action a été annulée"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Amount"
+msgstr "Montant"
+
+#. module: account_followup_advanced
+#: view:account_followup.print:account_followup_advanced.view_account_followup_print_semi
+#: view:account_followup.semi:account_followup_advanced.view_account_followup_semi
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_followup_advanced
+#: view:account_followup.print:account_followup_advanced.view_account_followup_print_semi
+msgid "Clear Partners"
+msgstr "Effacer la liste des partenaires"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:285
+#, python-format
+msgid "Click on Download button below to get Followup file generated."
+msgstr "Cliquez sur le bouton Téléchargez ci-dessous pour obtenir le fichier qui a été généré."
+
+#. module: account_followup_advanced
+#: view:account_followup.semi:account_followup_advanced.view_account_followup_semi
+msgid "Continue"
+msgstr "Continuer"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Description"
+msgstr "Description"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:34
+#, python-format
+msgid "Error"
+msgstr "Erreur"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,followup_id:0
+msgid "Follow-up"
+msgstr "Rappel"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,date:0
+msgid "Follow-up Sending Date"
+msgstr "Date d'envoi du rappel"
+
+#. module: account_followup_advanced
+#: view:account_followup.stat.by.partner:account_followup_advanced.account_followup_stat_by_partner_advanced_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Invoice Date"
+msgstr "Date de facturation"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière Mise à jour par"
+
+#. module: account_followup_advanced
+#: field:account_followup.semi,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière Mise à jour le"
+
+#. module: account_followup_advanced
+#: view:account_followup.stat.by.partner:account_followup_advanced.account_followup_stat_by_partner_advanced_search
+msgid "Level"
+msgstr "Niveau"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Litigation"
+msgstr "Litige"
+
+#. module: account_followup_advanced
+#: model:ir.actions.act_window,name:account_followup_advanced.action_customer_followup_litigations
+#: model:ir.ui.menu,name:account_followup_advanced.account_followup_litigations
+msgid "Litigations"
+msgstr "Litiges"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Maturity Date"
+msgstr "Date d'échéance"
+
+#. module: account_followup_advanced
+#: field:account_followup.print,no_lit:0
+msgid "No Litigations"
+msgstr "Pas de Litiges"
+
+#. module: account_followup_advanced
+#: help:account_followup.print,no_lit:0
+msgid "No Litigations on reminders prints"
+msgstr "Pas de litiges sur les impressions des rappels"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:34
+#, python-format
+msgid "No Model found. Contact your Administrator"
+msgstr "Pas de Modèle trouvé. Contactez votre Administrateur"
+
+#. module: account_followup_advanced
+#: view:account_followup.stat.by.partner:account_followup_advanced.account_followup_stat_by_partner_advanced_search
+msgid "Partner to Remind"
+msgstr "Partenaire à rappeler"
+
+#. module: account_followup_advanced
+#: model:ir.model,name:account_followup_advanced.model_account_followup_print
+#: model:ir.model,name:account_followup_advanced.model_account_followup_print_semi
+msgid "Print Follow-up & Send Mail to Customers"
+msgstr "Imprimer les relances et envoyer les courriels aux clients"
+
+#. module: account_followup_advanced
+#: view:account_followup.print:account_followup_advanced.view_account_followup_print_semi
+msgid "Print Letters (No Level change)"
+msgstr "Imprimer les Lettres (Pas de Changement de Niveau)"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Ref"
+msgstr "Réf."
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:84
+#, python-format
+msgid "Sales Order"
+msgstr "Ventes"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:46
+#, python-format
+msgid "Select Partners"
+msgstr "Sélectionnez les Partenaires"
+
+#. module: account_followup_advanced
+#: model:ir.actions.act_window,name:account_followup_advanced.action_customer_followup_semi
+#: model:ir.ui.menu,name:account_followup_advanced.account_followup_semi
+msgid "Semi Automatic Followups"
+msgstr "Relances Semi Automatiques"
+
+#. module: account_followup_advanced
+#: model:ir.model,name:account_followup_advanced.model_account_followup_semi
+msgid "Semi Automatic Print Followup & Send Mail to Customers"
+msgstr "Relance Semi Automatique et Envoi de Mail aux Clients"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:290
+#, python-format
+msgid "Send Letters : Actions Summary"
+msgstr "Envoi de Lettres : Résumé des Actions"
+
+#. module: account_followup_advanced
+#: code:addons/account_followup_advanced/wizard/account_followup_print.py:127
+#, python-format
+msgid "Send Letters and Emails: Actions Summary"
+msgstr "Envoi des Lettres et des Mails : Résumé des Actions"
+
+#. module: account_followup_advanced
+#: view:account_followup.print:account_followup_advanced.view_account_followup_print_semi
+msgid "Send emails and generate letters"
+msgstr "Envoyer les courriels et générer les lettres"
+
+#. module: account_followup_advanced
+#: view:account_followup.print:account_followup_advanced.view_account_followup_print_semi
+#: view:account_followup.semi:account_followup_advanced.view_account_followup_semi
+msgid "Send follow-ups"
+msgstr "Envoyer les relances"
+
+#. module: account_followup_advanced
+#: view:account_followup.semi:account_followup_advanced.view_account_followup_semi
+msgid ""
+"This action will send follow-up emails, print the letters and\n"
+"                        set the manual actions per customer, according to the follow-up levels defined."
+msgstr ""
+"Cette action enverra les mails de relance, imprimera les lettres et \n"
+"                        définira les actions manuelles par client,selon les niveau de relance définis."
+
+#. module: account_followup_advanced
+#: help:account_followup.semi,date:0
+msgid "This field allow you to select a forecast date to plan your follow-ups"
+msgstr "Ce champ vous permet de sélectionner une date pour prévoir vos relances"
+
+#. module: account_followup_advanced
+#: view:website:account_followup.report_followup
+msgid "Total:"
+msgstr "Total :"
+
+#. module: account_followup_advanced
+#: view:account_followup.semi:account_followup_advanced.view_account_followup_semi
+msgid "or"
+msgstr "ou"

@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* elneo_serial_number
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-09 09:53+0000\n"
+"PO-Revision-Date: 2015-11-09 10:56+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: Elneo <support@elneo.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_BE\n"
+"X-Generator: Poedit 1.8.1\n"
+
+#. module: elneo_serial_number
+#: help:product.template,serialnumber_required:0
+msgid "Check this box to require serial number on warehouse operations"
+msgstr "Cochez cette case pour que le numéro de série soit obligatoire sur les opérations d'entrepôt"
+
+#. module: elneo_serial_number
+#: field:sale.order.line,maintenance_element_ids:0
+msgid "Maintenance element"
+msgstr "Elément de maintenance"
+
+#. module: elneo_serial_number
+#: help:sale.order.line,maintenance_element_ids:0
+msgid "Maintenance elements created when this order has been sold."
+msgstr "Éléments de maintenance créés à la confirmation de la vente"
+
+#. module: elneo_serial_number
+#: model:ir.model,name:elneo_serial_number.model_product_product
+msgid "Product"
+msgstr "Produit"
+
+#. module: elneo_serial_number
+#: model:ir.model,name:elneo_serial_number.model_product_template
+msgid "Product Template"
+msgstr "Modèle de produit"
+
+#. module: elneo_serial_number
+#: field:maintenance.element,sale_order_line_id:0
+msgid "Sale line"
+msgstr "Ligne de vente"
+
+#. module: elneo_serial_number
+#: help:maintenance.element,sale_order_line_id:0
+msgid "Sale order line of sale of the element."
+msgstr "Ligne de vente de l'élément."
+
+#. module: elneo_serial_number
+#: model:ir.model,name:elneo_serial_number.model_sale_order
+msgid "Sales Order"
+msgstr "Commande de ventes"
+
+#. module: elneo_serial_number
+#: model:ir.model,name:elneo_serial_number.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de bon de commandes"
+
+#. module: elneo_serial_number
+#: field:product.template,serialnumber_required:0
+msgid "Serial Number Required"
+msgstr "Numéro de Série Requis"
+
+#. module: elneo_serial_number
+#: field:maintenance.intervention.product,serial_number:0
+msgid "Serial number"
+msgstr "Numéro de série"
+
+#. module: elneo_serial_number
+#: view:product.template:elneo_serial_number.product_template_serial_elneo_view
+msgid "stock.group_stock_manager"
+msgstr "stock.group_stock_manager"

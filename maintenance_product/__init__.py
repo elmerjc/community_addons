@@ -1,0 +1,3 @@
+import wizard
+import maintenance_product
+import res_config

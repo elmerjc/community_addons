@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="product_template_serial_elneo_view" model="ir.ui.view">
+            <field name="name">product.template.serial.elneo.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock_serial_number.view_template_serial_form"/>
+            <field name="arch" type="xml">
+            	<!-- <group name="lot" groups="stock.group_production_lot,stock.warehouse_manager"/> -->
+            	<field name="track_all" position="attributes">
+            		<attribute name="groups">stock.group_stock_manager</attribute>
+            	</field>
+            	<field name="track_incoming" position="attributes">
+            		<attribute name="groups">stock.group_stock_manager</attribute>
+            	</field>
+            	<field name="track_outgoing" position="attributes">
+            		<attribute name="groups">stock.group_stock_manager</attribute>
+            	</field>
+            	<field name="unique_serial_number" position="attributes">
+            		<attribute name="groups">stock.group_stock_manager</attribute>
+            	</field>
+            	<field name="unique_serial_number" position="after">
+            		<field name="serialnumber_required" groups="stock.group_production_lot"/>
+            	</field>
+            </field>
+        </record>
+        
+	
+	</data>
+</openerp>
