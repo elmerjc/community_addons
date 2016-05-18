@@ -46,11 +46,34 @@
             <field name="inherit_id" ref="product_normal_form_view"/>
             <field name="groups_id" eval="[(6, 0, [ref('group_restrict_prices')])]"/>
             <field name="arch" type="xml">
-                <field name="list_price" position="attributes">
+                <field name="lst_price" position="attributes">
                     <attribute name="readonly">1</attribute>
                 </field>
                 <field name="can_modify_prices" position="attributes">
                     <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_pricelist_form_view" model="ir.ui.view">
+            <field name="name">product.pricelist.form</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="sequence"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="product_pricelist_view_tree" model="ir.ui.view">
+            <field name="name">product.pricelist.tree</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="sequence" widget="handle"/>
                 </field>
             </field>
         </record>

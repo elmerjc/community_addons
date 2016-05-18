@@ -783,7 +783,7 @@
 			<field name="res_model">maintenance.intervention.task</field>
 			<!-- <field name="context">{'maintenance_intervention':True}</field> -->
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,calendar</field>
+			<field name="view_mode">calendar,tree,form</field>
 			<field name="context">{'search_default_affected': 1}</field>
 			<field name="domain">[('intervention_id','!=',False),('to_plan','=',True)]</field>
 			<field name="help">All maintenance interventions tasks</field>

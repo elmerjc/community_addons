@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name': 'Price Security',
-    'version': '8.0.2.1.1',
+    'version': '8.0.2.4.2',
     'description': """
 Price Security
 ==============
@@ -40,6 +40,7 @@ For users with price restriction, it restricts:
 * on invoices: change unit price
 * on product: change price
 
+NEW: sequence field on pricelist and payment term (you can only assigne pricelests or terms of lower priority than partner default one)
 """,
     'category': 'Sales Management',
     'author': 'ADHOC SA',
@@ -56,6 +57,7 @@ For users with price restriction, it restricts:
         'views/sale_view.xml',
         'views/invoice_view.xml',
         'views/partner_view.xml',
+        'views/account_view.xml',
     ],
     'demo_xml': [],
     'test': [],

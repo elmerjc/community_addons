@@ -10,7 +10,7 @@ openerp.pos_serial = function (instance) {
             attr.pos = this.pos;
             attr.order = this;
             var line = new instance.point_of_sale.Orderline({}, {pos: this.pos, order: this, product: product});
-
+            
             if (product.track_incoming || product.track_all) {
                 var self = this;
                 new instance.web.Model("stock.production.lot").get_func("search_read")
@@ -20,10 +20,10 @@ openerp.pos_serial = function (instance) {
                             initial_ids = _.map(result, function(x) {return x['id']});
                             this.pop = new instance.web.form.SelectCreatePopup(this);
                                 this.pop.select_element(
-                                    'stock.production.lot',
+                                    'stock.production.lot', 
                                     {
-                                        title: 'Select serial number for: ' + attr.display_name,
-                                        initial_ids: initial_ids,
+                                        title: 'Select serial number for: ' + attr.display_name, 
+                                        initial_ids: initial_ids, 
                                         initial_view: 'search',
                                         disable_multiple_selection: true,
                                         no_create: true
@@ -33,7 +33,7 @@ openerp.pos_serial = function (instance) {
                             var dataset = new instance.web.DataSetStatic(self, 'stock.production.lot', {});
                             dataset.name_get(element_ids).done(function(data) {
                                 if (data) {
-                                    new instance.web.Model("stock.production.lot").get_func("check_stock_lot")(data[0][0]).pipe(
+                                	new instance.web.Model("stock.production.lot").get_func("check_stock_lot")(data[0][0]).pipe(
                                         function(lot_res){
                                             if (lot_res > 0) {
                                              line.set_serial_id(data[0][0]);
@@ -67,7 +67,7 @@ openerp.pos_serial = function (instance) {
                                             } else {
                                                 alert (_t('Not enough quantity in this serial number !'))
                                             }
-                                        });
+	                                    });
                                 }
                             });
                         });
@@ -77,7 +77,7 @@ openerp.pos_serial = function (instance) {
             }
         },
     });
-
+    
     instance.point_of_sale.ProductCategoriesWidget = instance.point_of_sale.ProductCategoriesWidget.extend({
         perform_search: function(category, query, buy_result){
             if(query){
@@ -93,7 +93,7 @@ openerp.pos_serial = function (instance) {
             }
         },
     });
-
+    
     instance.point_of_sale.OrderWidget = instance.point_of_sale.OrderWidget.extend({
         set_value: function(val) {
             var order = this.pos.get('selectedOrder');
@@ -114,9 +114,9 @@ openerp.pos_serial = function (instance) {
             }
         },
     });
-
+    
     var orderline_id = 1;
-
+    
     var _super_orderline = instance.point_of_sale.Orderline.prototype;
     instance.point_of_sale.Orderline = instance.point_of_sale.Orderline.extend({
         initialize: function(attr,options){
@@ -152,7 +152,7 @@ openerp.pos_serial = function (instance) {
             return lines;
         }
     });
-
+    
     var PosModelSuper = instance.point_of_sale.PosModel
     instance.point_of_sale.PosModel = instance.point_of_sale.PosModel.extend({
         load_server_data: function(){
@@ -215,18 +215,18 @@ openerp.pos_serial = function (instance) {
                 view_manager = view_manager.getParent();
             }
 
-        //  if (view_manager) {
-        //      this.view_manager = view_manager;
-        //      if (view_manager.pop) {
-        //          view_manager.pop.on('switch_mode', this, function (e) {
-        //              self.drawer.toggle(e === 'graph');
-        //          });
-        //      } else {
-        //          view_manager.on('switch_mode', this, function (e) {
-        //                self.drawer.toggle(e === 'graph');
-        //            });
-        //      }
-        //  }
+//          if (view_manager) {
+//              this.view_manager = view_manager;
+//              if (view_manager.pop) {
+//                  view_manager.pop.on('switch_mode', this, function (e) {
+//                      self.drawer.toggle(e === 'graph');
+//                  });
+//              } else {
+//                  view_manager.on('switch_mode', this, function (e) {
+//                        self.drawer.toggle(e === 'graph');
+//                    });
+//              }
+//          }
             return $.when(p, this.ready);
         },
     });

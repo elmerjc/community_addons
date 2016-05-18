@@ -403,6 +403,7 @@ class maintenance_element(models.Model):
     def copy(self,default=None):
         new_element = super(maintenance_element, self).copy(default)
         new_element.code = self.env['ir.sequence'].get('maintenance.element')
+        
     
     @api.multi
     def name_get(self):
@@ -438,6 +439,13 @@ class maintenance_element(models.Model):
             new_lot = {'name':vals['serial_number'],'product_id':vals['product_id']}
             
             vals['lot_id'] = self.env['stock.production.lot'].create(new_lot).id
+            
+        if not vals.get('serial_number',False) and vals.get('lot_id',False):
+            #Serial Number is not defined and lot_id is defined
+            lot_id = vals.get('lot_id',False)
+            lot = self.env['stock.production.lot'].browse(lot_id)
+            if lot and lot.name:
+                vals.update({'serial_number':lot.name})
         return vals
         
     
