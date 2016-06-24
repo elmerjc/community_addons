@@ -1,7 +1,10 @@
 #################
 ## Eclipse
 #################
-
+*.gz
+*.zip
+*.exe
+*.bz2
 *.pydevproject
 .project
 .metadata
