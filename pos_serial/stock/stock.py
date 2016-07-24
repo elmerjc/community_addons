@@ -229,7 +229,7 @@ class stock_picking(osv.osv):
         # Create the necessary operations for the grouped quants and remaining qtys
         for key, qty in qtys_grouped.items():
             product_brw = product_obj.browse(cr, uid, key[0], context=context)
-            if product_brw.track_all or product_brw.track_incoming:
+            if product_brw.lot_unique_ok:
                 if qty > 1:
                     for each_qty in range(int(qty)):
                         vals.append({

@@ -12,7 +12,7 @@
         
         <template id="index" name="pos_serial index" inherit_id="point_of_sale.index">
 	        <xpath expr="." position="inside">
-	        	<!--link rel="stylesheet" href="/pos_serial/static/src/css/pos.css" id="pos-stylesheet"/-->
+	        	<link rel="stylesheet" href="/pos_serial/static/src/css/pos.css" id="pos-stylesheet"/>
 	        	<link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
 	        </xpath>
 	    </template>

@@ -12,6 +12,7 @@ openerp.pos_serial = function (instance) {
             var line = new instance.point_of_sale.Orderline({}, {pos: this.pos, order: this, product: product});
             
             if (product.track_incoming || product.track_all) {
+            // if (product.lot_unique_ok) {
                 var self = this;
                 new instance.web.Model("stock.production.lot").get_func("search_read")
                             ([['product_id', '=', attr.id],['quant_ids.location_id.usage','=', 'internal']]).pipe(
@@ -40,7 +41,7 @@ openerp.pos_serial = function (instance) {
                                                 line.set_serial(data[0][1]);
                                                 sr_no = data[0][1];
                                                 (self.get('orderLines')).each(_.bind( function(item) {
-                                                    if (item.get_product().id == attr.id && item.get_serial() == data[0][1]) {
+                                                    if (item.get_product().lot_unique_ok && item.get_product().id == attr.id && item.get_serial() == data[0][1]) {
                                                         alert('Same product is already assigned with same serial number !');
                                                         sr_no = null;
                                                         return false;
@@ -101,7 +102,8 @@ openerp.pos_serial = function (instance) {
             var mode = this.numpad_state.get('mode');
             if (this.editable && order.getSelectedLine()) {
                 if( mode === 'quantity'){
-                    if (val != 'remove' && val != '' && order.getSelectedLine().get_serial()) {
+                    if (val != 'remove' && val != '' && order.getSelectedLine().get_product().lot_unique_ok && 
+                        order.getSelectedLine().get_serial()) {
                         alert('Can not change quantity if serial number assigned !');
                     } else {
                         order.getSelectedLine().set_quantity(val);
@@ -162,7 +164,7 @@ openerp.pos_serial = function (instance) {
             loaded = loaded.then(function(){
                 return self.fetch(
                     'product.product',
-                    ['track_incoming','track_all'],
+                    ['track_incoming','track_all','lot_unique_ok'],
                     [['sale_ok','=',true],['available_in_pos','=',true]],
                     {}
                 );

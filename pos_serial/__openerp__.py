@@ -30,7 +30,7 @@ This module is used to assign unique serial number to the products from Point of
     'website': "www.acespritech.com",
     'price': 155.00, 
     'currency': 'EUR',
-    'depends': ['web', 'point_of_sale', 'base', 'sale', 'purchase'],
+    'depends': ['point_of_sale', 'product_unique_serial'],
     'images': ['static/images/main_screenshot.png'],
     'data': [
         'views/pos_serial.xml',
@@ -41,6 +41,6 @@ This module is used to assign unique serial number to the products from Point of
     'test': [],
     'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
