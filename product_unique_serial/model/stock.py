@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import _, api, fields, exceptions, models
+from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
 
 
@@ -54,61 +54,16 @@ class StockProductionLot(models.Model):
 class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
-    @api.model
-    def _quant_create(self, qty, move, lot_id=False, owner_id=False,
-                      src_package_id=False, dest_package_id=False,
-                      force_location_from=False, force_location_to=False):
-        # In case of 'Unique Lot' check if the product does not exist somewhere
-        # internally already
-        if lot_id and move.product_id.lot_unique_ok:
-            # Extract from Odoo v9
-            if qty != 1.0:
-                raise exceptions.Warning(_('You should only receive by '
-                                           'the piece with the same serial '
-                                           'number'))
-            # Customize domain
-            domain_quants = [
-                ('product_id', '=', move.product_id.id),
-                ('lot_id', '=', lot_id),
-                ('qty', '>', 0.0)
-            ]
-            # Check product tracking field to get location usage for domain
-            if move.product_id.track_all:
-                domain_quants += [('location_id.usage', '!=', 'inventory')]
-            else:
-                usages = []
-                if move.product_id.track_incoming:
-                    usages += ['internal']
-                if move.product_id.track_outgoing:
-                    usages += ['customer', 'transit']
-                # mrp module should be installed to use track production field
-                if hasattr(move.product_id, "track_production") and \
-                        move.product_id.track_production:
-                    usages += ['production']
-                if usages:
-                    domain_quants += [
-                        ('location_id.usage', 'in', tuple(usages))]
-            # check if exist other similar quant
-            if self.search(domain_quants):
-                lot_name = self.env['stock.production.lot'].browse(lot_id).name
-                raise exceptions.Warning(_('The serial number %s can only '
-                                           'belong to a single product in '
-                                           'stock') % lot_name)
-        return super(StockQuant, self)._quant_create(
-            qty, move, lot_id, owner_id, src_package_id,
-            dest_package_id, force_location_from, force_location_to)
-
     @api.multi
     @api.constrains('product_id', 'lot_id', 'qty')
-    def _check_inicity_lot_product(self):
+    def _check_uniqueness_lot_product(self):
+        note = _(
+            'Remember: When a serial number (lot) is selected, its quantity '
+            'is fixed against the quantity in the serial number (lot) and not '
+            'against the quantity in full of the product.')
         for line in self:
             if line.lot_id and line.product_id and\
                     line.product_id.lot_unique_ok:
-                note = _(
-                    'When you select a serial number (lot), the quantity is '
-                    'corrected with respect to\nthe quantity of that serial '
-                    'number (lot) and not to the total quantity of the '
-                    'product.')
                 quants = self.search([
                     ('lot_id', '=', line.lot_id.id),
                     ('product_id', '=', line.product_id.id),
@@ -116,16 +71,17 @@ class StockQuant(models.Model):
                     ('location_id', '=', line.location_id.id)])
                 if line.qty > 1:
                     raise ValidationError(_(
-                        'The product %s has active unique lot and you '
-                        'try set %s in the lot %s.\nRemmember:\n %s' % (
+                        'Product %s has been configured to use unique lots. '
+                        'You are trying to set %s items in lot %s. %s' % (
                             line.product_id.name, line.qty,
                             line.lot_id.name, note)))
                 elif sum([x.qty for x in quants]) > 1:
                     raise ValidationError(_(
-                        'The product %s has active unique lot and you '
-                        'try set more products in the same lot '
-                        '%s.\nRemmember:\n %s' % (
-                            line.product_id.name, line.lot_id.name, note)))
+                        'Product %s has been configured to use unique lots. '
+                        'You are trying to increase %s items in the lot %s.'
+                        ' %s' % (
+                            line.product_id.name, line.qty,
+                            line.lot_id.name, note)))
 
 
 class StockInventoryLine(models.Model):

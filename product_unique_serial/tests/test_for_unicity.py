@@ -30,6 +30,7 @@ from openerp import exceptions
 from openerp.tests.common import TransactionCase
 from openerp.tools import mute_logger
 from psycopg2 import IntegrityError
+from openerp import _
 
 
 class TestUnicity(TransactionCase):
@@ -39,6 +40,19 @@ class TestUnicity(TransactionCase):
     module unicity:
     - Test 1: Can't be created two Serial Numbers with the same name
     """
+
+    note = _(
+        u'Remember: When a serial number (lot) is selected, its quantity '
+        u'is fixed against the quantity in the serial number (lot) and not '
+        u'against the quantity in full of the product.')
+
+    msg_greater = _(
+        u'Product %s has been configured to use unique lots. '
+        u'You are trying to set %s items in lot %s. %s')
+
+    msg_increase = _(
+        u'Product %s has been configured to use unique lots. '
+        u'You are trying to increase %s items in the lot %s. %s')
 
     def setUp(self):
         super(TestUnicity, self).setUp()
@@ -155,6 +169,7 @@ class TestUnicity(TransactionCase):
         =============================================
         Warehouse: Your Company
         """
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_1')
         # Creating move line for picking
         product = self.env.ref('product_unique_serial.product_demo_1')
         stock_move_datas = [{
@@ -175,16 +190,12 @@ class TestUnicity(TransactionCase):
             stock_move_datas, picking_data_2,
             self.env.ref('stock.picking_type_in'))
         # Executing the wizard for pickings transfering
-        self.transfer_picking(
-            picking_1,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number 86137801852514 can only belong to"
-                " a single product in stock"):
-            self.transfer_picking(
-                picking_2,
-                [self.env.ref('product_unique_serial.serial_number_demo_1')])
+        self.transfer_picking(picking_1, lot_id)
+
+        with self.assertRaises(exceptions.ValidationError) as err:
+            self.transfer_picking(picking_2, [lot_id])
+        msg = self.msg_increase % (product.name, 1.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_1_2_1product_1serialnumber_2p_track_incoming(self):
         """
@@ -206,6 +217,7 @@ class TestUnicity(TransactionCase):
         Comment: The product in this case should track_incoming
                  instead of track all
         """
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_1')
         # Creating move line for picking
         product = self.env.ref('product_unique_serial.product_demo_1')
         # track_incoming and lot_unique_ok to test unicity
@@ -232,16 +244,12 @@ class TestUnicity(TransactionCase):
             stock_move_datas, picking_data_2,
             self.env.ref('stock.picking_type_in'))
         # Executing the wizard for pickings transfering
-        self.transfer_picking(
-            picking_1,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number 86137801852514 can only belong to"
-                " a single product in stock"):
-            self.transfer_picking(
-                picking_2,
-                [self.env.ref('product_unique_serial.serial_number_demo_1')])
+        self.transfer_picking(picking_1, lot_id)
+
+        with self.assertRaises(exceptions.ValidationError) as err:
+            self.transfer_picking(picking_2, [lot_id])
+        msg = self.msg_increase % (product.name, 1.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_2_1_1product_1serialnumber_2p_out(self):
         """
@@ -262,6 +270,7 @@ class TestUnicity(TransactionCase):
         NOTE: To can operate this case, we need an IN PICKING
         Warehouse: Your Company
         """
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_1')
         # Creating move line for picking
         product = self.env.ref('product_unique_serial.product_demo_1')
         stock_move_datas = [{
@@ -282,9 +291,7 @@ class TestUnicity(TransactionCase):
         picking_in = self.create_stock_picking(
             stock_move_datas, picking_data_in,
             self.env.ref('stock.picking_type_in'))
-        self.transfer_picking(
-            picking_in,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
+        self.transfer_picking(picking_in, lot_id)
         # OUT PROCESS
         picking_out_1 = self.create_stock_picking(
             stock_move_datas, picking_data_out_1,
@@ -293,16 +300,11 @@ class TestUnicity(TransactionCase):
             stock_move_datas, picking_data_out_2,
             self.env.ref('stock.picking_type_out'))
         # Executing the wizard for pickings transfering
-        self.transfer_picking(
-            picking_out_1,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number 86137801852514 can only belong to"
-                " a single product in stock"):
-            self.transfer_picking(
-                picking_out_2,
-                [self.env.ref('product_unique_serial.serial_number_demo_1')])
+        self.transfer_picking(picking_out_1, lot_id)
+        with self.assertRaises(exceptions.ValidationError) as err:
+            self.transfer_picking(picking_out_2, lot_id)
+        msg = self.msg_increase % (product.name, 1.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_2_2_1product_1serialnumber_2p_track_outgoing(self):
         """
@@ -325,6 +327,7 @@ class TestUnicity(TransactionCase):
         Comment: The product in this case should be check track_outgoing
                  instead of track all
         """
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_1')
         # Creating move line for picking
         product = self.env.ref('product_unique_serial.product_demo_1')
         # track_outgoing and lot_unique_ok to test unicity
@@ -351,9 +354,7 @@ class TestUnicity(TransactionCase):
         picking_in = self.create_stock_picking(
             stock_move_datas, picking_data_in,
             self.env.ref('stock.picking_type_in'))
-        self.transfer_picking(
-            picking_in,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
+        self.transfer_picking(picking_in, lot_id)
         # OUT PROCESS
         picking_out_1 = self.create_stock_picking(
             stock_move_datas, picking_data_out_1,
@@ -362,16 +363,11 @@ class TestUnicity(TransactionCase):
             stock_move_datas, picking_data_out_2,
             self.env.ref('stock.picking_type_out'))
         # Executing the wizard for pickings transfering
-        self.transfer_picking(
-            picking_out_1,
-            self.env.ref('product_unique_serial.serial_number_demo_1'))
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number 86137801852514 can only belong to"
-                " a single product in stock"):
-            self.transfer_picking(
-                picking_out_2,
-                [self.env.ref('product_unique_serial.serial_number_demo_1')])
+        self.transfer_picking(picking_out_1, lot_id)
+        with self.assertRaises(exceptions.ValidationError) as err:
+            self.transfer_picking(picking_out_2, lot_id)
+        msg = self.msg_increase % (product.name, 1.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_3_1product_qtyno1_1serialnumber_1p_in(self):
         """
@@ -387,6 +383,7 @@ class TestUnicity(TransactionCase):
         """
         # Creating move line for picking
         product = self.env.ref('product_unique_serial.product_demo_1')
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_2')
         stock_move_datas = [{
             'product_id': product.id,
             'qty': 2.0
@@ -399,13 +396,10 @@ class TestUnicity(TransactionCase):
             stock_move_datas, picking_data_1,
             self.env.ref('stock.picking_type_in'))
         # Executing the wizard for pickings transfering
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "You should only receive by the piece with the same serial "
-                "number"):
-            self.transfer_picking(
-                picking_1,
-                [self.env.ref('product_unique_serial.serial_number_demo_2')])
+        with self.assertRaises(exceptions.ValidationError) as err:
+            self.transfer_picking(picking_1, [lot_id])
+        msg = self.msg_greater % (product.name, 2.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_4_1product_qty3_3serialnumber_1p_in(self):
         """
@@ -565,11 +559,10 @@ class TestUnicity(TransactionCase):
         stock_move_2 = self.stock_move_obj.create(stock_move_vals)
         stock_move_2.action_confirm()
         # Error raised expected with message expected.
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number %s can only belong to"
-                " a single product in stock" % lot_vals['name']):
+        with self.assertRaises(exceptions.ValidationError) as err:
             stock_move_2.action_done()
+        msg = self.msg_increase % (product.name, 1.0, lot_move.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_7_2_1product_1serialnumber_track_production_out(self):
         """
@@ -610,15 +603,15 @@ class TestUnicity(TransactionCase):
         stock_move_2 = self.stock_move_obj.create(stock_move_vals)
         stock_move_2.action_confirm()
         # Error raised expected with message expected.
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "The serial number %s can only belong to"
-                " a single product in stock" % lot_vals['name']):
+        with self.assertRaises(exceptions.ValidationError) as err:
             stock_move_2.action_done()
+        msg = self.msg_increase % (product.name, 1.0, lot_move.name, self.note)
+        self.assertEquals(err.exception.value, msg)
 
     def test_8_inventory_adjustment(self):
         """Test 8. It tries to adjust inventory for a product that has \
         selected 'unique piece' with as much new 1"""
+        lot_id = self.env.ref('product_unique_serial.serial_number_demo_4')
         stock_inv = self.stock_inventory_obj.create({
             'name': 'Adjust Test',
             'location_id': self.stock_loc.id,
@@ -628,13 +621,13 @@ class TestUnicity(TransactionCase):
         self.stock_inventory_line_obj.create({
             'product_id': self.prod_d1.id,
             'location_id': self.stock_loc.id,
-            'prod_lot_id': self.env.ref(
-                'product_unique_serial.serial_number_demo_4').id,
+            'prod_lot_id': lot_id.id,
             'product_qty': 5,
             'inventory_id': stock_inv.id
         })
-        with self.assertRaisesRegexp(
-                exceptions.Warning,
-                "You should only receive by the piece with the same serial "
-                "number"):
+
+        with self.assertRaises(exceptions.ValidationError) as err:
             stock_inv.action_done()
+        msg = self.msg_greater % (
+            self.prod_d1.name, 5.0, lot_id.name, self.note)
+        self.assertEquals(err.exception.value, msg)
