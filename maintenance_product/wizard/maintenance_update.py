@@ -550,6 +550,20 @@ class MaintenanceProductFlowUpdate(models.TransientModel):
         for procurement in procurements:
             if procurement.purchase_line_id:
                 procurement.purchase_line_id = None
+                
+                
+    
+    @api.model
+    def _cancel_link_incoming_move_dest(self,order_line):
+        
+        # Cancel link between incoming picking move and destination move if there is a purchase
+        incoming_procurements = self.env['procurement.order'].search([('sale_line_id','=',order_line.id),('purchase_line_id','!=',False)])
+        if incoming_procurements:
+            for incoming_procurement in incoming_procurements:
+                moves = incoming_procurement.move_ids.filtered(lambda r:r.state != 'done')
+                moves.write({'move_dest_id':False})
+    
+        return True
         
     @api.model
     def _check_pickings(self,intervention):
@@ -557,11 +571,13 @@ class MaintenanceProductFlowUpdate(models.TransientModel):
             if self.env['procurement.order'].search([('sale_line_id','=',sale_order_line.id),('state','=','done')]):
                 raise Warning(_('You have deleted a product that have pickings already done. Please cancel manually products in sale order.'))
             else:
-                #procurements = self.env['procurement.order'].search([('sale_line_id','=',sale_order_line.id)])
-                #procurements.cancel()
+               
+                self._cancel_link_incoming_move_dest(sale_order_line)
+                
                 self._cancel_link_sale_purchase(sale_order_line)
                 sale_order_line.button_cancel()
                 sale_order_line.unlink()
+                
         
     
     @api.multi

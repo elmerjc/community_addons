@@ -22,8 +22,11 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
+from dateutil.parser import parse
+
 import time
 import json
+import pytz
 
 def get_datetime(date_field):
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
@@ -359,7 +362,6 @@ class maintenance_intervention(models.Model):
     time_planned = fields.Float('Time planned', help='Time initially planned to do intervention.')
     installation_warehouse_id = fields.Many2one(related='installation_id.warehouse_id',  string="Warehouse",store=True)
     
-    
     _order = 'date_start,id desc'
     
     @api.onchange('installation_id')
@@ -501,7 +503,18 @@ class maintenance_intervention_task(models.Model):
             maintenance_time = maintenance_time + 1
         self.maintenance_time = maintenance_time
     
-    
+    @api.one
+    def _extract_end_time(self):
+        if self.date_end:
+            # Get offset (timezone) - Must be dynamic because of daylight saving time
+            naive = datetime.strptime(self.date_end,'%Y-%m-%d %H:%M:%S')
+            bxl = pytz.timezone('Europe/Brussels')
+            localized = bxl.localize(naive)
+            offset = localized.tzinfo._utcoffset.seconds
+            
+            naive += timedelta(seconds = offset)
+            self.hour_to = naive.strftime('%H:%M')
+        
     intervention_id = fields.Many2one("maintenance.intervention", "Intervention",index=True)
     name = fields.Char('Task Summary', size=128)
     user_id = fields.Many2one('res.users', 'Assigned to')
@@ -513,6 +526,31 @@ class maintenance_intervention_task(models.Model):
     maintenance_time = fields.Integer(compute=_get_maintenance_time, string='Maintenance time', method=True, help="Number of maintenance time period to fill duration of intervention")
     installation_id = fields.Many2one('maintenance.installation',related='intervention_id.installation_id')
     partner_id = fields.Many2one('res.partner',related='intervention_id.partner_id')
+    
+    intervention_code= fields.Char('Intervention Code', related='intervention_id.code')
+    intervention_type = fields.Char('Intervention Type', related='intervention_id.maint_type.name')
+    hour_to = fields.Char('Ends at (Hour)', compute='_extract_end_time')
+    
+    @api.one
+    def _get_user_name(self):
+        if self.user_id:
+            self.technician = self.user_id.name
+        else:
+            self.technician = ''
+    
+    technician = fields.Char('Technician assigned to', related='user_id.name')
+    client_name = fields.Char('Client name', related='partner_id.name')
+    installation_zip = fields.Char('Installation zip', related='installation_id.partner_id.zip')
+    installation_city = fields.Char('Installation town', related='installation_id.address_id.city')
+    
+    '''
+    @api.one
+    def _get_attendees(self):
+        self.attendee_ids = [self.env['res.users'].search([('user_id', '=', self.user_id.id)]),]
+        temp = 'potato'
+    
+    attendee_ids = fields.Many2many("res.users", string="Attendees", compute='_get_attendees')
+    '''
     
     @api.one
     def write(self,vals):
