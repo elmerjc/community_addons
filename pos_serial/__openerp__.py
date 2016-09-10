@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name': 'Point of Sale for Unique Serial Number',
-    'version': '1.0',
+    'version': '8.0.1.0',
     'category': 'General',
     'summary': 'Assign unique serial number to the products from Point of Sale.',
     'description': """
