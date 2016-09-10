@@ -26,7 +26,7 @@
     'description': """
 This module is used to assign unique serial number to the products from Point of Sale.
 """,
-    'author': "Acespritech Solutions Pvt. Ltd.",
+    'author': ["DVIT.ME","Acespritech Solutions Pvt. Ltd."],
     'website': "www.acespritech.com",
     'price': 155.00, 
     'currency': 'EUR',
