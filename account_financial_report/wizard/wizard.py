@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 ###########################################################################
 #    Module Writen to OpenERP, Open Source Management Solution
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
@@ -27,14 +27,12 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
-from openerp import pooler
 import time
 from openerp.tools.translate import _
 
 
-class WizardReport(osv.osv_memory):
+class wizard_report(osv.osv_memory):
     _name = "wizard.report"
-    _rec_name = 'afr_id'
 
     _columns = {
         'afr_id': fields.many2one(
@@ -43,22 +41,22 @@ class WizardReport(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'currency_id': fields.many2one(
             'res.currency', 'Currency',
-            help="Currency at which this report will be expressed. If not "
-            "selected will be used the one set in the company"),
-        'inf_type': fields.selection(
-            [('BS', 'Ending Balance'),
-             ('IS', 'Variation on Periods')], 'Type', required=True),
-        'columns': fields.selection([
-            ('one', 'End. Balance'),
-            ('two', 'Debit | Credit'),
-            ('four', 'Initial | Debit | Credit | YTD'),
-            ('five', 'Initial | Debit | Credit | Period | YTD'),
-            ('qtr', "4 QTR's | YTD"),
-            ('thirteen', '12 Months | YTD'),
-            # ('currency', 'End. Balance Currency'),
-        ], 'Columns', required=True),
+            help="Currency at which this report will be expressed. If not \
+            selected will be used the one set in the company"),
+        'inf_type': fields.selection([('BS', 'Balance Sheet'),
+                                      ('IS', 'Income Statement')],
+                                     'Type',
+                                     required=True),
+        'columns': fields.selection(
+            [('one', 'End. Balance'),
+             ('two', 'Debit | Credit'),
+             ('four', 'Initial | Debit | Credit | YTD'),
+             ('five', 'Initial | Debit | Credit | Period | YTD'),
+             ('qtr', "4 QTR's | YTD"), ('thirteen', '12 Months | YTD')],
+            'Columns', required=True),
         'display_account': fields.selection(
-            [('all', 'All Accounts'), ('bal', 'With Balance'),
+            [('all', 'All Accounts'),
+             ('bal', 'With Balance'),
              ('mov', 'With movements'),
              ('bal_mov', 'With Balance / Movements')],
             'Display accounts'),
@@ -66,69 +64,58 @@ class WizardReport(osv.osv_memory):
             'Up to level',
             help='Display accounts up to this level (0 to show all)'),
 
-        'account_list': fields.many2many(
-            'account.account', 'rel_wizard_account', 'account_list',
-            'account_id', 'Root accounts', required=True),
+        'account_list': fields.many2many('account.account',
+                                         'rel_wizard_account',
+                                         'account_list',
+                                         'account_id',
+                                         'Root accounts',
+                                         required=True),
 
-        'fiscalyear': fields.many2one(
-            'account.fiscalyear', 'Fiscal year',
-            help='Fiscal Year for this report', required=True),
+        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal year',
+                                      help='Fiscal Year for this report',
+                                      required=True),
         'periods': fields.many2many(
-            'account.period', 'rel_wizard_period', 'wizard_id', 'period_id',
-            'Periods', help='All periods in the fiscal year if empty'),
+            'account.period', 'rel_wizard_period',
+            'wizard_id', 'period_id', 'Periods',
+            help='All periods in the fiscal year if empty'),
 
         'analytic_ledger': fields.boolean(
-            'Analytic Ledger', help="Allows to Generate an Analytic Ledger "
-            "for accounts with moves. Available when Balance Sheet and "
-            "'Initial | Debit | Credit | YTD' are selected"),
+            'Analytic Ledger',
+            help="Allows to Generate an Analytic Ledger for accounts with \
+            moves. Available when Balance Sheet and 'Initial | Debit | Credit \
+            | YTD' are selected"),
         'journal_ledger': fields.boolean(
-            'Journal Ledger', help="Allows to Generate an Journal Ledger for "
-            "accounts with moves. Available when Balance Sheet and 'Initial | "
-            "Debit | Credit | YTD' are selected"),
+            'Journal Ledger',
+            help="Allows to Generate an Journal Ledger for accounts with \
+            moves. Available when Balance Sheet and 'Initial | Debit | Credit \
+            | YTD' are selected"),
         'partner_balance': fields.boolean(
-            'Partner Balance', help="Allows to Generate a Partner Balance for "
-            "accounts with moves. Available when Balance Sheet and 'Initial | "
-            "Debit | Credit | YTD' are selected"),
-        'tot_check': fields.boolean(
-            'Summarize?',
-            help='Checking will add a new line at the end of the Report which '
-            'will Summarize Columns in Report'),
-        'lab_str': fields.char(
-            'Description', help='Description for the Summary', size=128),
+            'Partner Balance',
+            help="Allows to Generate a Partner Balance for accounts with \
+            moves. Available when Balance Sheet and 'Initial | Debit | Credit \
+            | YTD' are selected"),
+        'tot_check': fields.boolean('Summarize?',
+                                    help='Checking will add a new line at the \
+                                    end of the Report which will Summarize \
+                                    Columns in Report'),
+        'lab_str': fields.char('Description',
+                               help='Description for the Summary', size=128),
 
         'target_move': fields.selection(
-            [('posted', 'All Posted Entries'), ('all', 'All Entries')],
-            'Entries to Include', required=True,
-            help='Print All Journal Entries or just Posted Journal Entries'),
-
-        # Deprecated fields
-        'filter': fields.selection(
-            [('bydate', 'By Date'), ('byperiod', 'By Period'),
-             ('all', 'By Date and Period'), ('none', 'No Filter')],
-            'Date/Period Filter'),
+            [('posted', 'All Posted Entries'),
+             ('all', 'All Entries'),
+             ], 'Entries to Include',
+            required=True,
+            help='Print All Accounting Entries or just Posted Accounting \
+            Entries'),
+        # ~ Deprecated fields
+        'filter': fields.selection([('bydate', 'By Date'),
+                                    ('byperiod', 'By Period'),
+                                    ('all', 'By Date and Period'),
+                                    ('none', 'No Filter')],
+                                   'Date/Period Filter'),
         'date_to': fields.date('End date'),
         'date_from': fields.date('Start date'),
-        'group_by': fields.selection(
-            [('currency', 'Currency'), ('partner', 'Partner')],
-            'Group by',
-            help='Only applies in the way of the end'
-            ' balance multicurrency report is show.'),
-        'lines_detail': fields.selection([
-            ('detail', 'Detail'), ('full', 'Full Detail'),
-            ('total', 'Totals')],
-            'Line Details',
-            help='Only applies in the way of the end balance multicurrency'
-            ' report is show.'),
-        'print_analytic_lines': fields.boolean(
-            'With Analytic Lines',
-            help="If this checkbox is active will print the analytic lines in"
-            " the analytic ledger four columns report. This option only"
-            " applies when the analytic ledger is selected."),
-        'report_format': fields.selection([
-            ('pdf', 'PDF'),
-            # TODO: enable print on controller to HTML
-            # ('html', 'HTML'),
-            ('xls', 'Spreadsheet')], 'Report Format'),
     }
 
     _defaults = {
@@ -137,22 +124,18 @@ class WizardReport(osv.osv_memory):
         'filter': lambda *a: 'byperiod',
         'display_account_level': lambda *a: 0,
         'inf_type': lambda *a: 'BS',
-        'company_id': lambda self, cr, uid, c:
-        self.pool.get('res.company')._company_default_get(cr, uid,
-                                                          'account.invoice',
-                                                          context=c),
-        'fiscalyear': lambda self, cr, uid, c:
-        self.pool.get('account.fiscalyear').find(cr, uid),
+        'company_id': lambda self, cr, uid, c: self.pool['res.company'].
+        _company_default_get(cr, uid, 'account.invoice', context=c),
+        'fiscalyear': lambda self, cr, uid, c: self.
+        pool['account.fiscalyear'].find(cr, uid),
         'display_account': lambda *a: 'bal_mov',
-        'columns': lambda *a: 'four',
+        'columns': lambda *a: 'five',
         'target_move': 'posted',
-        'group_by': 'currency',
-        'lines_detail': 'total',
-        'report_format': lambda *args: 'pdf',
     }
 
     def onchange_inf_type(self, cr, uid, ids, inf_type, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         res = {'value': {}}
 
         if inf_type != 'BS':
@@ -162,16 +145,17 @@ class WizardReport(osv.osv_memory):
 
     def onchange_columns(self, cr, uid, ids, columns, fiscalyear, periods,
                          context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         res = {'value': {}}
 
         p_obj = self.pool.get("account.period")
-        all_periods = p_obj.search(cr, uid, [
-            ('fiscalyear_id', '=', fiscalyear), ('special', '=', False)],
-            context=context)
-        sval = set(periods[0][2])
-        tval = set(all_periods)
-        go = periods[0][2] and sval.issubset(tval) or False
+        all_periods = p_obj.search(cr, uid,
+                                   [('fiscalyear_id', '=', fiscalyear),
+                                    ('special', '=', False)], context=context)
+        s = set(periods[0][2])
+        t = set(all_periods)
+        go = periods[0][2] and s.issubset(t) or False
 
         if columns != 'four':
             res['value'].update({'analytic_ledger': False})
@@ -187,16 +171,18 @@ class WizardReport(osv.osv_memory):
 
     def onchange_analytic_ledger(self, cr, uid, ids, company_id,
                                  analytic_ledger, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         context['company_id'] = company_id
-        res = {}
-        res['value'] = {
-            'currency_id': self.pool.get('res.company').browse(
-                cr, uid, company_id, context=context).currency_id.id}
+        res = {'value': {}}
+        cur_id = self.pool.get('res.company').browse(
+            cr, uid, company_id, context=context).currency_id.id
+        res['value'].update({'currency_id': cur_id})
         return res
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         context['company_id'] = company_id
         res = {'value': {}}
 
@@ -215,60 +201,63 @@ class WizardReport(osv.osv_memory):
         return res
 
     def onchange_afr_id(self, cr, uid, ids, afr_id, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         res = {'value': {}}
         if not afr_id:
             return res
         afr_brw = self.pool.get('afr').browse(cr, uid, afr_id, context=context)
-        res['value'].update({'currency_id': afr_brw.currency_id and
-                             afr_brw.currency_id.id or
-                             afr_brw.company_id.currency_id.id})
+        res['value'].update({
+                            'currency_id': afr_brw.currency_id
+                            and afr_brw.currency_id.id
+                            or afr_brw.company_id.currency_id.id})
         res['value'].update({'inf_type': afr_brw.inf_type or 'BS'})
         res['value'].update({'columns': afr_brw.columns or 'five'})
-        res['value'].update({'display_account': afr_brw.display_account or
-                             'bal_mov'})
-        res['value'].update({'display_account_level':
-                             afr_brw.display_account_level or 0})
-        res['value'].update({'fiscalyear': afr_brw.fiscalyear_id and
-                             afr_brw.fiscalyear_id.id})
+        res['value'].update({
+                            'display_account': afr_brw.display_account
+                            or 'bal_mov'})
+        res['value'].update({
+                            'display_account_level': afr_brw.
+                            display_account_level or 0})
+        res['value'].update({
+                            'fiscalyear': afr_brw.fiscalyear_id
+                            and afr_brw.fiscalyear_id.id})
         res['value'].update({'account_list': [
                             acc.id for acc in afr_brw.account_ids]})
         res['value'].update({'periods': [p.id for p in afr_brw.period_ids]})
-        res['value'].update({'analytic_ledger': (afr_brw.analytic_ledger or
-                                                 False)})
+        res['value'].update({
+                            'analytic_ledger':
+                            afr_brw.analytic_ledger or False})
         res['value'].update({'tot_check': afr_brw.tot_check or False})
         res['value'].update({'lab_str': afr_brw.lab_str or _(
             'Write a Description for your Summary Total')})
-        res['value'].update({'report_format': afr_brw.report_format or False})
-        res['value'].update(
-            {'partner_balance': afr_brw.partner_balance or False})
-        res['value'].update(
-            {'print_analytic_lines': afr_brw.print_analytic_lines or False})
         return res
 
     def _get_defaults(self, cr, uid, data, context=None):
-        context = context and dict(context) or {}
-        user = pooler.get_pool(cr.dbname).get(
-            'res.users').browse(cr, uid, uid, context=context)
+        if context is None:
+            context = {}
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         if user.company_id:
             company_id = user.company_id.id
         else:
-            company_id = pooler.get_pool(cr.dbname).get(
-                'res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+            company_id = self.pool['res.company'].search(
+                cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
-        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        fiscalyear_obj = self.pool['account.fiscalyear']
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
         data['form']['context'] = context
         return data['form']
 
     def _check_state(self, cr, uid, data, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         if data['form']['filter'] == 'bydate':
             self._check_date(cr, uid, data, context)
         return data['form']
 
     def _check_date(self, cr, uid, data, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
 
         if data['form']['date_from'] > data['form']['date_to']:
             raise osv.except_osv(_('Error !'), (
@@ -281,21 +270,24 @@ class WizardReport(osv.osv_memory):
         res = cr.dictfetchall()
 
         if res:
-            if (data['form']['date_to'] > res[0]['date_stop'] or
-                    data['form']['date_from'] < res[0]['date_start']):
+            if (data['form']['date_to'] > res[0]['date_stop']
+                    or data['form']['date_from'] < res[0]['date_start']):
                 raise osv.except_osv(_('UserError'),
-                                     _('Dates shall be between %s and %s') % (
-                    res[0]['date_start'], res[0]['date_stop']))
+                                     'Las fechas deben estar entre %s y %s'
+                                     % (res[0]['date_start'],
+                                        res[0]['date_stop']))
             else:
                 return 'report'
         else:
             raise osv.except_osv(_('UserError'), 'No existe periodo fiscal')
 
     def period_span(self, cr, uid, ids, fy_id, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
         ap_obj = self.pool.get('account.period')
-        fy_id = fy_id and isinstance(fy_id, (list, tuple)) and fy_id[0] or fy_id  # noqa
+        fy_id = fy_id and type(fy_id) in (list, tuple) and fy_id[0] or fy_id
         if not ids:
+            # ~ No hay periodos
             return ap_obj.search(cr, uid, [('fiscalyear_id', '=', fy_id),
                                            ('special', '=', False)],
                                  order='date_start asc')
@@ -311,7 +303,8 @@ class WizardReport(osv.osv_memory):
                              order='date_start asc')
 
     def print_report(self, cr, uid, ids, data, context=None):
-        context = context and dict(context) or {}
+        if context is None:
+            context = {}
 
         data = {}
         data['ids'] = context.get('active_ids', [])
@@ -322,9 +315,10 @@ class WizardReport(osv.osv_memory):
             del data['form']['date_from']
             del data['form']['date_to']
 
-            data['form']['periods'] = \
-                self.period_span(cr, uid, data['form']['periods'],
-                                 data['form']['fiscalyear'])
+            data['form']['periods'] = self.period_span(
+                cr, uid,
+                data['form']['periods'],
+                data['form']['fiscalyear'])
 
         elif data['form']['filter'] == 'bydate':
             self._check_date(cr, uid, data)
@@ -337,59 +331,43 @@ class WizardReport(osv.osv_memory):
             self._check_date(cr, uid, data)
             lis2 = str(data['form']['periods']).replace(
                 "[", "(").replace("]", ")")
-            sqlmm = """
-            SELECT MIN(p.date_start) AS inicio, MAX(p.date_stop) AS fin
-            FROM account_period p
-            WHERE p.id IN %s""" % lis2
+            sqlmm = """select min(p.date_start) as inicio,
+                              max(p.date_stop) as fin
+                       from account_period p
+                       where p.id in %s""" % lis2
             cr.execute(sqlmm)
             minmax = cr.dictfetchall()
             if minmax:
-                if (data['form']['date_to'] < minmax[0]['inicio']) or \
-                        (data['form']['date_from'] > minmax[0]['fin']):
+                if (data['form']['date_to'] < minmax[0]['inicio']) \
+                        or (data['form']['date_from'] > minmax[0]['fin']):
                     raise osv.except_osv(_('Error !'), _(
                         'La interseccion entre el periodo y fecha es vacio'))
 
-        xls = data['form'].get('report_format') == 'xls'
-
-        if data['form']['columns'] == 'currency':
-            name = xls and 'afr.multicurrency' or 'afr.rml.multicurrency'
         if data['form']['columns'] == 'one':
-            name = xls and 'afr.1cols' or 'afr.rml.1cols'
+            name = 'afr.1cols'
         if data['form']['columns'] == 'two':
-            name = xls and 'afr.1cols' or 'afr.rml.2cols'
+            name = 'afr.2cols'
         if data['form']['columns'] == 'four':
-            if data['form']['analytic_ledger'] and \
-                    data['form']['inf_type'] == 'BS':
-                name = (xls and 'afr.analytic.ledger' or
-                        'afr.rml.analytic.ledger')
-            elif data['form']['journal_ledger'] and \
-                    data['form']['inf_type'] == 'BS':
-                name = xls and 'afr.journal.ledger' or 'afr.rml.journal.ledger'
-            elif data['form']['partner_balance'] and \
-                    data['form']['inf_type'] == 'BS':
-                name = (xls and 'afr.partner.balance' or
-                        'afr.rml.partner.balance')
+            if data['form']['analytic_ledger'] \
+                    and data['form']['inf_type'] == 'BS':
+                name = 'afr.analytic.ledger'
+            elif data['form']['journal_ledger'] \
+                    and data['form']['inf_type'] == 'BS':
+                name = 'afr.journal.ledger'
+            elif data['form']['partner_balance'] \
+                    and data['form']['inf_type'] == 'BS':
+                name = 'afr.partner.balance'
             else:
-                name = xls and 'afr.1cols' or 'afr.rml.4cols'
+                name = 'afr.4cols'
         if data['form']['columns'] == 'five':
-            name = xls and 'afr.1cols' or 'afr.rml.5cols'
+            name = 'afr.5cols'
         if data['form']['columns'] == 'qtr':
-            name = xls and 'afr.1cols' or 'afr.rml.qtrcols'
+            name = 'afr.qtrcols'
         if data['form']['columns'] == 'thirteen':
-            name = xls and 'afr.13cols' or 'afr.rml.13cols'
+            name = 'afr.13cols'
 
-        if xls:
-            context['xls_report'] = xls
+        return {'type': 'ir.actions.report.xml',
+                'report_name': name,
+                'datas': data}
 
-            return self.pool['report'].get_action(
-                cr, uid, [], name, data=data,
-                context=context)
-
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': name,
-            'datas': data,
-        }
-
-
-WizardReport()
+wizard_report()

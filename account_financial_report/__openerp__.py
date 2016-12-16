@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 ###########################################################################
 #    Copyright (C) OpenERP Venezuela (<http://openerp.com.ve>).
 #    All Rights Reserved
@@ -24,30 +24,43 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 {
-    "name": "Account Financial Reports",
+    "name": "Common financial reports",
     "version": "2.0",
-    "author": "Vauxoo",
+    "author": "Vauxoo,Odoo Community Association (OCA)",
     "website": "http://www.vauxoo.com",
-    "license": "AGPL-3",
-    "depends": [
-        "base",
-        "account",
-        "controller_report_xls",
-    ],
+    "license": "GPL-3 or any later version",
+    "depends": ["base",
+                "account"
+                ],
     "category": "Accounting",
+    "description": """
+Multiporpuse Accounting report generator.
+=========================================
+
+From the wizard you will be asked to provide information needed to create your
+report.
+
+Not only you can set the option within the wizard you can create your own
+Customized Account Financial Reports, in here, you will be able to create
+Templates for generating Two types of Reports: Balance Sheets and Income
+Statements, incluiding Analytic Ledgers. Besides, you can select within a set
+of choices to get better detailed report, be it that you ask it by one or
+several periods, by months (12 Months + YTD), or by quarters (4QRT's + YTD).
+Even you can get your reports in currencies other than the one set on your
+company.
+
+In the [ Account's Sign on Reports ] Section in the Company will be able to
+set the sign conventions for the Accounts, so that you will be able to see in
+positives Values in your reports for those accounts with Accreditable nature
+where appropriate""",
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
-        "data/report_paperformat.xml",
-        "report/layouts.xml",
-        "report/template.xml",
-        "report/template_analytic_ledger.xml",
-        "report/template_journal_ledger.xml",
-        "report/template_partner_balance.xml",
         "view/report.xml",
         "view/wizard.xml",
         "view/company_view.xml",
         "view/account_financial_report_view.xml",
     ],
-    "installable": True
+    "active": False,
+    'installable': False
 }

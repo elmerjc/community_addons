@@ -18,8 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.tests.common import TransactionCase
 from datetime import datetime, timedelta
+import logging
+from openerp.tests.common import TransactionCase
+_logger = logging.getLogger(__name__)
+
+try:
+    import pandas as pd
+except ImportError:
+    _logger.debug('Cannot `import pandas`.')
+
+try:
+    from tabulate import tabulate
+except ImportError:
+    _logger.debug('Cannot `import tabulate`.')
 
 
 class TestStockCardNegativeStock(TransactionCase):
@@ -104,10 +116,10 @@ class TestStockCardNegativeStock(TransactionCase):
 
             for move_id in picking_id.move_lines:
                 self.wizard_item.create({
-                    'transfer_id': wizard_id.id,
                     'product_id': move_id.product_id.id,
-                    'quantity': move_id.product_qty,
+                    'transfer_id': wizard_id.id,
                     'sourceloc_id': move_id.location_id.id,
+                    'quantity': move_id.product_qty,
                     'destinationloc_id': move_id.location_dest_id.id,
                     'product_uom_id': move_id.product_uom.id,
                 })
@@ -128,8 +140,8 @@ class TestStockCardNegativeStock(TransactionCase):
             'location_id': self.ref('stock.stock_location_stock'),
             'pricelist_id': self.ref('purchase.list0'),
             'order_line': [(0, 0, {
-                'name': "{0} (qty={1}, cost={2})".format(self.product_id.name,
-                                                         qty, cost),
+                'name': "%s (qty=%s, cost=%s)" % (
+                    self.product_id.name, qty, cost),
                 'product_id': self.product_id.id,
                 'price_unit': cost,
                 'product_qty': qty,
@@ -145,7 +157,7 @@ class TestStockCardNegativeStock(TransactionCase):
     def create_sale_order(self, qty=False, price=False):
         sale_order_id = self.sale_order.create({
             'partner_id': self.partner_id.id,
-            'client_order_ref': "Sale Order (qty={0}, price={1})".format(
+            'client_order_ref': "Sale Order (qty=%s, price=%s)" % (
                 str(qty), str(price)),
             'order_policy': 'manual',
             'order_line': [(0, 0, {
@@ -177,25 +189,30 @@ class TestStockCardNegativeStock(TransactionCase):
                 self.create_sale_order(qty=qty, price=costprice)
 
         card_lines = self.get_stock_valuations()
+
+        df = pd.DataFrame(card_lines)
+        tbl_sc = tabulate(df, headers='keys', tablefmt='psql')
+        _logger.info('Gotten Stock Card \n%s', tbl_sc)
+
+        df = pd.DataFrame(self.inv_ids)
+        tbl_sc = tabulate(df, headers='keys', tablefmt='psql')
+        _logger.info('Expected Stock Card \n%s', tbl_sc)
+
         self.assertEqual(len(self.inv_ids), len(card_lines),
                          "Both lists should have the same length(=12)")
         for expected, succeded in zip(self.inv_ids, card_lines):
             self.assertEqual(expected['avg'],
                              succeded['average'],
-                             "Average Cost {0} is not the expected".
-                             format(expected))
+                             "Average Cost %s is not the expected" % expected)
 
             self.assertEqual(expected['cost'],
                              succeded['cost_unit'],
-                             "Unit Cost {0} is not the expected".
-                             format(expected))
+                             "Unit Cost %s is not the expected" % expected)
 
             self.assertEqual(expected['inv_value'],
                              succeded['inventory_valuation'],
-                             "Inventory Value {0} does not match".
-                             format(expected))
+                             "Inventory Value %s does not match" % expected)
 
             self.assertEqual(expected['move_value'],
                              succeded['move_valuation'],
-                             "Movement Value {0} does not match".
-                             format(expected))
+                             "Movement Value %s does not match" % expected)

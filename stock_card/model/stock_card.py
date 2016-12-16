@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from __future__ import division
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import Warning as UserError
@@ -13,9 +14,15 @@ class StockCard(models.TransientModel):
 class StockCardProduct(models.TransientModel):
     _name = 'stock.card.product'
     _rec_name = 'product_id'
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product',
+                                 help='Gets the average price from the '
+                                 'warehouse products')
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse',
+                                   help='Gets the average price from the '
+                                   'warehouse products')
     stock_card_move_ids = fields.One2many(
-        'stock.card.move', 'stock_card_product_id', 'Product Moves')
+        'stock.card.move', 'stock_card_product_id', 'Product Moves',
+        help='Product movements')
 
     def _get_fieldnames(self):
         return {
@@ -39,30 +46,45 @@ class StockCardProduct(models.TransientModel):
         product_obj.sudo().browse(product_id).write(field2write)
 
     @api.multi
+    def get_locations(self, warehouse):
+        """ Returns location ids of location that are contained in warehouse
+        :param warehouse: browse record (stock.warehouse)
+        """
+        loc_obj = self.env["stock.location"]
+        if not warehouse:
+            return False
+        locations = loc_obj.search(
+            [('parent_left', '<=', warehouse.view_location_id.parent_right),
+             ('parent_left', '>=', warehouse.view_location_id.parent_left)]).\
+            filtered(lambda r: r.usage != 'view').mapped('id')
+        return locations and tuple(locations) or False
+
+    @api.multi
     def stock_card_move_get(self):
         self.ensure_one()
         if not (self.product_id.valuation == 'real_time' and
                 self.product_id.cost_method in ('average', 'real')):
             return True
         self.stock_card_move_ids.unlink()
-        self.create_stock_card_lines(self.product_id.id)
+        location_ids = self.get_locations(self.warehouse_id)
+        self.create_stock_card_lines(self.product_id.id, location_ids)
         return self.action_view_moves()
 
     def _get_quant_values(self, move_id, col='', inner='', where=''):
-        self._cr.execute(
-            '''
-            SELECT
-                COALESCE(cost, 0.0) AS cost,
-                COALESCE(qty, 0.0) AS qty,
-                propagated_from_id AS antiquant
-                {col}
-            FROM stock_quant_move_rel AS sqm_rel
-            INNER JOIN stock_quant AS sq ON sq.id = sqm_rel.quant_id
-            {inner}
-            WHERE sqm_rel.move_id = {move_id}
-            {where}
-            '''.format(move_id=move_id, col=col, inner=inner, where=where)
-        )
+        query = ('''
+                 SELECT
+                     COALESCE(cost, 0.0) AS cost,
+                     COALESCE(qty, 0.0) AS qty,
+                     propagated_from_id AS antiquant
+                     %(col)s
+                 FROM stock_quant_move_rel AS sqm_rel
+                 INNER JOIN stock_quant AS sq ON sq.id = sqm_rel.quant_id
+                 %(inner)s
+                 WHERE sqm_rel.move_id = %(move_id)s
+                 %(where)s
+                 ''') % dict(move_id=move_id,
+                             col=col, inner=inner, where=where)
+        self._cr.execute(query)
         return self._cr.dictfetchall()
 
     def _get_price_on_consumed(self, row, vals, qntval):
@@ -154,7 +176,8 @@ class StockCardProduct(models.TransientModel):
         move_id = row['move_id']
         move_brw = sm_obj.browse(move_id)
         # NOTE: Identify the originating move_id of returning move
-        origin_id = move_brw.origin_returned_move_id.id
+        origin_id = move_brw.origin_returned_move_id or move_brw.move_dest_id
+        origin_id = origin_id.id
         # NOTE: Falling back to average in case customer return is
         # orphan, i.e., return was created from scratch
         old_average = (
@@ -227,10 +250,10 @@ class StockCardProduct(models.TransientModel):
         if dst in ('supplier',):
             self._get_price_on_supplier_return(row, vals, qntval)
 
-        if src in ('supplier', 'production', 'inventory', 'transit'):
+        if src in ('supplier', 'production', 'inventory', ):
             self._get_price_on_supplied(row, vals, qntval)
 
-        if src in ('customer',):
+        if src in ('customer', 'transit'):
             self._get_price_on_customer_return(row, vals, qntval)
 
         self._get_move_average(row, vals)
@@ -275,8 +298,9 @@ class StockCardProduct(models.TransientModel):
 
         return True
 
-    def _stock_card_move_get_avg(self, product_id, vals):
-        vals['move_ids'] = self._stock_card_move_history_get(product_id)
+    def _stock_card_move_get_avg(self, product_id, vals, locations_ids=None):
+        vals['move_ids'] = self._stock_card_move_history_get(
+            product_id, locations_ids)
         vals['queue'] = vals['move_ids'][:]
         while vals['queue']:
 
@@ -290,8 +314,8 @@ class StockCardProduct(models.TransientModel):
 
         return True
 
-    def _get_default_params(self):
-        return dict(
+    def _get_default_params(self, product_id, locations_ids=None):
+        res = dict(
             product_qty=0.0,
             average=0.0,
             inventory_valuation=0.0,
@@ -304,13 +328,21 @@ class StockCardProduct(models.TransientModel):
             prior_qty=0.0,
             prior_valuation=0.0,
         )
+        if locations_ids:
+            vals = self._stock_card_move_get(product_id)
+            values = {}
+            for row in vals['move_ids']:
+                values.update(
+                    {row['move_id']: vals['lines'][row['move_id']].copy()})
+            res['global_val'] = values
+        return res
 
-    def _stock_card_move_get(self, product_id):
+    def _stock_card_move_get(self, product_id, locations_ids=None):
         self.stock_card_move_ids.unlink()
 
-        vals = self._get_default_params()
+        vals = self._get_default_params(product_id, locations_ids)
 
-        self._stock_card_move_get_avg(product_id, vals)
+        self._stock_card_move_get_avg(product_id, vals, locations_ids)
 
         res = []
         for row in vals['move_ids']:
@@ -319,9 +351,9 @@ class StockCardProduct(models.TransientModel):
 
         return vals
 
-    def create_stock_card_lines(self, product_id):
+    def create_stock_card_lines(self, product_id, locations_ids=None):
         scm_obj = self.env['stock.card.move']
-        vals = self._stock_card_move_get(product_id)
+        vals = self._stock_card_move_get(product_id, locations_ids)
         for row in vals['move_ids']:
             scm_obj.create(vals['lines'][row['move_id']])
 
@@ -369,10 +401,9 @@ class StockCardProduct(models.TransientModel):
                 _('Asked Product has not Moves to show'))
         return action
 
-    def _stock_card_move_history_get(self, product_id):
-        self._cr.execute(
-            '''
-            SELECT
+    def _stock_card_move_history_get(self, product_id, locations_ids=None):
+        query = '''
+            SELECT distinct
                 sm.id AS move_id, sm.date, sm.product_id, prod.product_tmpl_id,
                 sm.product_qty, sl_src.usage AS src_usage,
                 sl_dst.usage AS dst_usage,
@@ -401,9 +432,13 @@ class StockCardProduct(models.TransientModel):
                     sl_src.usage != 'internal' AND sl_dst.usage = 'internal')
                 ) -- Actual incoming or outgoing Stock Moves
                 AND sm.product_id = %s
-            ORDER BY sm.date
-            ''', (product_id,)
-        )
+                '''
+        if locations_ids:
+            query += self._cr.mogrify('''
+                AND (sl_src.id IN %s or sl_dst.id IN %s)
+            ''', (locations_ids, locations_ids))
+        query += '''ORDER BY sm.date'''
+        self._cr.execute(query, (product_id,))
         return self._cr.dictfetchall()
 
 

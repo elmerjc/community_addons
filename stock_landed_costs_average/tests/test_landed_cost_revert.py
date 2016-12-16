@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.stock_landed_costs_average.tests.test_stock_landed_common \
-    import TestStockLandedCommon
+from .test_stock_landed_common import TestStockLandedCommon
 
 
 class TestLandedCostRevert(TestStockLandedCommon):
@@ -103,9 +102,9 @@ class TestLandedCostRevert(TestStockLandedCommon):
         # cost are the same
         self.assertEqual(
             card_lines['before_landed'], card_lines['after_revert'],
-            'Something is not right with before_landed={0} '
-            'and after_revert={1}'.format(card_lines['before_landed'],
-                                          card_lines['after_revert']))
+            'Something is not right with before_landed=%s '
+            'and after_revert=%s' % (
+                card_lines['before_landed'], card_lines['after_revert']))
 
     def validate_acct_entries_values(self, landed_cost_id, product_id, vals):
         acct_move_id = landed_cost_id.account_move_id
@@ -127,7 +126,7 @@ class TestLandedCostRevert(TestStockLandedCommon):
 
         # validate at least one journal entry line was checked
         self.assertTrue(registered_lines,
-                        "There weren't lines to check for {0}".format(vals))
+                        "There weren't lines to check for %s" % vals)
 
     def validate_landed_cost_acct_entries(self, cost_method, product_id, vals):
         product_id.write({'cost_method': cost_method})
