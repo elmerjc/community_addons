@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+
+#---------------------------------------------------------------------------------------------------------
+#   Extend the task
+#---------------------------------------------------------------------------------------------------------
+
+
+ 		<record id="view_task_form2_inh" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.view_task_form2"/>       
+            <field name="arch" type="xml">       
+                <xpath expr="//sheet[@string='Task']//page[@string='Extra Info']//group[@string='Gantt View']" position="replace"/>
+        		<xpath expr="//field[@name='planned_hours']" position="replace"/>            	            	
+            	<xpath expr="//field[@name='remaining_hours']" position="replace"/>
+           		<xpath expr="//field[@name='effective_hours']" position="replace"/>
+            </field>
+        </record>
+
+        <!-- Task -->
+ 		<record id="view_task_form2" model="ir.ui.view">
+            <field name="name">project.task.form</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.view_task_form2"/>       
+            <field name="arch" type="xml">       
+
+        		<page string='Extra Info' position="inside">
+					<notebook name="Scheduling">
+						<page  string="Scheduling">
+						<group colspan="4" col="4">
+							<group colspan="2" col="2">
+                                <separator string="Limitations" colspan="2"/>
+           						<field name="date_earliest_start"/>
+           						<field name="date_latest_finish"/>          
+           						<field name="is_critical_path" readonly="1"/>    						
+							</group>
+							<group colspan="2" col="2">
+                                <separator string="Margins" colspan="2"/>
+           						<field name="total_float" readonly="1"/>
+           						<field name="free_float" readonly="1"/>               						
+							</group>
+							<group colspan="2" col="2">
+                                <separator string="Duration" colspan="2"/>
+           						<field name="duration" on_change="onchange_duration(duration)"/>
+           						<field name="planned_hours" widget="float_time"/>
+                                <field name="effective_hours" widget="float_time"/>
+                                <label for="remaining_hours" string="Remaining"/>
+                                <div>
+                                    <field name="remaining_hours" widget="float_time"/>
+                                </div>
+
+							</group>
+							<group colspan="2" col="2">                						
+           						<separator string="Early dates" colspan="2"/>           						
+           						<field name="date_early_start" readonly="1"/>           						
+           						<field name="date_early_finish" readonly="1"/>
+							</group>           	
+							<group colspan="2" col="2">   		
+								<separator string="Late dates" colspan="2"/>			           						
+           						<field name="date_late_start" readonly="1"/>           						
+           						<field name="date_late_finish" readonly="1" />
+							</group>		 	   	
+							<group colspan="2" col="2">   		
+								<separator string="Actual dates" colspan="2"/>			           						
+           						<field name="date_start" readonly="1"/>           						
+           						<field name="date_end" readonly="1" />
+           						<field name="create_date" readonly="1" />
+							</group>		 	   								            						
+							                          
+                            <button name="calculate_network" icon="gtk-execute"
+                            	string="Calculate Network" type="object"/>
+						</group>
+                        </page>
+					</notebook>
+        		</page>
+            </field>
+        </record>
+
+        <record id="view_task_gantt2" model="ir.ui.view">
+            <field name="name">project.task.gantt2</field>
+            <field name="model">project.task</field>
+            <field name="type">gantt</field>
+            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.view_task_gantt"/>       
+            <field name="arch" type="xml">
+                <xpath expr="//gantt" position="replace">
+                    <gantt date_start="date_early_start" date_stop="date_early_finish" progress="progress" string="Tasks" default_group_by="project_id">
+
+                    </gantt>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_calendar2" model="ir.ui.view">
+            <field name="name">project.task.calendar2</field>
+            <field name="model">project.task</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="project.view_task_calendar"/>       
+            <field name="arch" type="xml">
+                <xpath expr="//calendar" position="replace">
+                    <calendar color="user_id" date_start="date_early_start" date_stop="date_early_finish" string="Tasks">
+                        <field name="name"/>
+                        <field name="project_id"/>
+                    </calendar>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
