@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
-#    Copyright 2015 Vauxoo
-#    Author: Moisés Lopez, Osval Reyes
+#    Odoo, Open Source Management Solution
+#    Copyright (C) 2007-2015 (<https://vauxoo.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,23 +20,26 @@
 ##############################################################################
 from lxml import etree
 
-from openerp import api, models
+from openerp import models, api
+
+
+# TODO: Looking for how append domain string
+def domain_str_append(old_domain_str, subdomain_str):
+    return old_domain_str.replace(
+        "]",
+        ", " + subdomain_str + "]")
 
 
 class StockTransferDetails(models.TransientModel):
     _inherit = 'stock.transfer_details'
 
-    def domain_str_append(self, old_domain_str, subdomain_str):
-        return old_domain_str.replace("]", ", " + subdomain_str + "]")
-
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',
                         toolbar=False, submenu=False):
-        """
-        Allow create serial only with incoming picking
-        Set option "no_create = True"
-        when picking type is different to incoming.
-        """
+        """Allow create serial only with incoming picking
+        Set option "no_create = True" when picking type is different to
+        incoming."""
+
         res = super(StockTransferDetails, self).fields_view_get(
             view_id=view_id, view_type=view_type,
             toolbar=toolbar, submenu=submenu)
@@ -52,24 +55,16 @@ class StockTransferDetails(models.TransientModel):
                 for node in doc.xpath("//field[@name='lot_id']"):
                     if picking.picking_type_id.code != 'incoming':
                         node.set('options', "{'no_create': True}")
-                        # Don't show unused serial.
-                        # allow to select a serial with moves.
-                        # TODO: Disable this option when
-                        #       fields.function last_location_id
-                        #       was fix it
-                        sub_domain = "('quant_ids', '!=', [])"
                         # Set domain to show only serial number
                         # that exists in source location
-                        # TODO: Enable when fields.function
-                        #       last_location_id was fix it
-                        # sub_domain = "('last_location_id', '=', " + \
-                        #     "sourceloc_id)"
+                        sub_domain = "('last_location_id', '=', " + \
+                            "sourceloc_id)"
                     else:
                         # Don't show old serial number
                         # just allow to create new one or
                         # allow to select a serial without moves
                         sub_domain = "('quant_ids', '=', [])"
-                    new_domain = self.domain_str_append(
+                    new_domain = domain_str_append(
                         node.get('domain'), sub_domain)
                     node.set('domain', new_domain)
                 res['fields']['item_ids']['views'][
