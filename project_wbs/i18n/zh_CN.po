@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-10 10:35+0100\n"
-"PO-Revision-Date: 2016-11-10 10:35+0100\n"
+"POT-Creation-Date: 2017-02-14 07:40+0100\n"
+"PO-Revision-Date: 2017-02-14 07:41+0100\n"
 "Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -23,7 +23,9 @@ msgstr ""
 
 #. module: project_wbs
 #: view:project.project:project_wbs.view_project
-msgid "#555487:account_class == 'phase';#31305C:account_class == 'program'"
+msgid ""
+"#555487:account_class == 'phase';#31305C:account_class == 'program';#807FA2:"
+"account_class == 'deliverable';"
 msgstr ""
 
 #. module: project_wbs
@@ -35,17 +37,6 @@ msgstr ""
 "项目约束是影响到项目如何规划和管理的已知事实。约束是超出项目规划者控制范围的"
 "给定因素，除非撤销或移除，否则将迫使项目行为来解决它。\n"
 "        "
-
-#. module: project_wbs
-#: model:ir.actions.act_window,help:project_wbs.open_view_project_projects
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Click to start a new project.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">点击以创建一个新项目。</p>\n"
-"            "
 
 #. module: project_wbs
 #: model:ir.actions.act_window,help:project_wbs.open_view_project_wbs
@@ -68,18 +59,6 @@ msgstr ""
 "你可以定义内部项目（如研发，改进销售流程）、私有项目（我的Todos）或者客户项"
 "目。 </p>\n"
 "<p>你将能跟项目的内部用户进行协作，或者邀请客户来分享你的活动。</p>\n"
-"            "
-
-#. module: project_wbs
-#: model:ir.actions.act_window,help:project_wbs.open_view_phases_or_deliverables
-#: model:ir.actions.act_window,help:project_wbs.open_view_project_work_packages
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Click to start a new work package.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">点击以创建一个新的工作包。</p>\n"
 "            "
 
 #. module: project_wbs
@@ -122,6 +101,7 @@ msgstr "下级WBS元素"
 #: field:account.analytic.account,account_class:0
 #: view:project.project:project_wbs.edit_project
 #: view:project.project:project_wbs.view_project
+#: view:project.project:project_wbs.view_project_project_filter
 #: field:project.project,account_class:0
 msgid "Class"
 msgstr "类"
@@ -205,11 +185,6 @@ msgid "Date of the latest work done on this account."
 msgstr ""
 
 #. module: project_wbs
-#: field:project.project,location_id:0
-msgid "Default Stock Location"
-msgstr ""
-
-#. module: project_wbs
 #: selection:account.analytic.account,account_class:0
 msgid "Deliverable"
 msgstr "交付物"
@@ -218,17 +193,6 @@ msgstr "交付物"
 #: model:ir.actions.act_window,name:project_wbs.act_project_project_2_deliverable_all
 msgid "Deliverables"
 msgstr "交付物"
-
-#. module: project_wbs
-#: field:project.project,dest_address_id:0
-#, fuzzy
-msgid "Delivery Address"
-msgstr "交付物"
-
-#. module: project_wbs
-#: help:project.project,dest_address_id:0
-msgid "Delivery address for the current contract /project."
-msgstr ""
 
 #. module: project_wbs
 #: code:addons/project_wbs/models/form_button.py:20
@@ -284,16 +248,6 @@ msgstr "完整的WBS路径"
 #: help:project.project,complete_wbs_name:0
 msgid "Full path in the WBS hierarchy"
 msgstr "在WBS层级结构中的完整路径"
-
-#. module: project_wbs
-#: view:project.project:project_wbs.view_project_kanban
-msgid "GO DOWN"
-msgstr ""
-
-#. module: project_wbs
-#: view:project.project:project_wbs.view_project_kanban
-msgid "GO UP"
-msgstr ""
 
 #. module: project_wbs
 #: field:project.project,recurring_invoices:0
@@ -363,11 +317,13 @@ msgid "Level"
 msgstr "层级"
 
 #. module: project_wbs
+#: view:account.analytic.account:project_wbs.view_account_analytic_account_search
 #: view:project.project:project_wbs.view_project_project_filter
 msgid "Master Portfolio"
 msgstr ""
 
 #. module: project_wbs
+#: view:account.analytic.account:project_wbs.view_account_analytic_account_search
 #: view:project.project:project_wbs.view_project_project_filter
 msgid "Master Program"
 msgstr ""
@@ -391,11 +347,6 @@ msgstr "杂项"
 #. module: project_wbs
 #: field:project.project,month_ids:0
 msgid "Month"
-msgstr ""
-
-#. module: project_wbs
-#: field:project.project,move_ids:0
-msgid "Moves for this analytic account"
 msgstr ""
 
 #. module: project_wbs
@@ -436,7 +387,6 @@ msgstr ""
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
-#: view:project.project:project_wbs.view_project
 msgid "Parent"
 msgstr "上级"
 
@@ -451,16 +401,6 @@ msgid "Phase"
 msgstr "阶段"
 
 #. module: project_wbs
-#: model:ir.ui.menu,name:project_wbs.menu_wbs_phases_or_deliverables
-msgid "Phases and Deliverables"
-msgstr ""
-
-#. module: project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_phases_or_deliverables
-msgid "Phases or Deliverables"
-msgstr ""
-
-#. module: project_wbs
 #: selection:account.analytic.account,account_class:0
 #: field:account.analytic.account,portfolio_analytic_account_id:0
 #: field:project.project,portfolio_analytic_account_id:0
@@ -468,6 +408,8 @@ msgid "Portfolio"
 msgstr ""
 
 #. module: project_wbs
+#: model:ir.actions.act_window,name:project_wbs.group_portfolio
+#: model:ir.actions.act_window,name:project_wbs.group_program
 #: model:ir.ui.menu,name:project_wbs.menu_project_wbs_portfolio
 msgid "Portfolios"
 msgstr ""
@@ -523,8 +465,9 @@ msgstr "项目配置"
 
 #. module: project_wbs
 #: code:addons/project_wbs/models/project_project.py:335
-#: model:ir.actions.act_window,name:project_wbs.open_view_project_projects
-#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_projects
+#: model:ir.actions.act_window,name:project_wbs.group_project
+#: model:ir.actions.act_window,name:project_wbs.group_subproject
+#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_project
 #, python-format
 msgid "Projects"
 msgstr "项目"
@@ -574,6 +517,11 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: project_wbs
+#: view:project.project:project_wbs.edit_project
+msgid "Root Analytic Accounts"
+msgstr ""
+
+#. module: project_wbs
 #: help:account.analytic.account,portfolio_analytic_account_id:0
 #: help:project.project,portfolio_analytic_account_id:0
 #, fuzzy
@@ -606,10 +554,10 @@ msgid "Start Date"
 msgstr "起始日期"
 
 #. module: project_wbs
-#: help:project.project,use_reserved_stock:0
-msgid ""
-"Stock with reference to this analytic account is considered to be reserved."
-msgstr ""
+#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_subproject
+#, fuzzy
+msgid "Sub-projects"
+msgstr "项目"
 
 #. module: project_wbs
 #: help:project.project,fix_price_to_invoice:0
@@ -727,11 +675,6 @@ msgid "Uninvoiced Time"
 msgstr ""
 
 #. module: project_wbs
-#: field:project.project,use_reserved_stock:0
-msgid "Use reserved stock"
-msgstr ""
-
-#. module: project_wbs
 #: field:project.project,user_ids:0
 #, fuzzy
 msgid "User"
@@ -757,18 +700,21 @@ msgstr "WBS元素名称"
 
 #. module: project_wbs
 #: model:ir.actions.act_window,name:project_wbs.create_wbs_element
-#: model:ir.actions.act_window,name:project_wbs.group_portfolio
-#: model:ir.actions.act_window,name:project_wbs.group_program
 #: model:ir.actions.act_window,name:project_wbs.open_view_project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_tree
-#: model:ir.actions.act_window,name:project_wbs.open_wbs_grouped
 msgid "WBS elements"
 msgstr "WBS元素"
 
 #. module: project_wbs
-#: field:project.project,warehouse_id:0
-msgid "Warehouse"
+#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_kanban
+msgid "WBS kanban"
 msgstr ""
+
+#. module: project_wbs
+#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_tree
+#: model:ir.ui.menu,name:project_wbs.menu_fullwbs
+#, fuzzy
+msgid "WBS overview"
+msgstr "WBS编号"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
@@ -778,12 +724,6 @@ msgstr "任务分解结构"
 #. module: project_wbs
 #: selection:account.analytic.account,account_class:0
 msgid "Work Package"
-msgstr "任务包"
-
-#. module: project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_project_work_packages
-#: model:ir.ui.menu,name:project_wbs.menu_project_work_packages
-msgid "Work Packages"
 msgstr "任务包"
 
 #. module: project_wbs
@@ -799,8 +739,8 @@ msgstr ""
 #: view:project.project:project_wbs.view_project
 msgid ""
 "bold:account_class in 'portfolio';bold:account_class in 'program';bold:"
-"account_class in 'project';bold:account_class in 'phase'; italic:state in "
-"'cancelled'"
+"account_class in 'project';bold:account_class in 'phase';bold:account_class "
+"in 'deliverable';italic:state in 'cancelled'"
 msgstr ""
 
 #. module: project_wbs
@@ -826,6 +766,38 @@ msgstr "on_change_parent(parent_id)"
 #: view:project.project:project_wbs.view_project
 msgid "top"
 msgstr ""
+
+#~ msgid "WBS Edit"
+#~ msgstr "\t"
+
+#, fuzzy
+#~ msgid "Full WBS"
+#~ msgstr "完整的WBS编号"
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Click to start a new project.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">点击以创建一个新项目。</p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Click to start a new work package.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">点击以创建一个新的工作包。</p>\n"
+#~ "            "
+
+#, fuzzy
+#~ msgid "Delivery Address"
+#~ msgstr "交付物"
+
+#~ msgid "Work Packages"
+#~ msgstr "任务包"
 
 #~ msgid ""
 #~ "<p class=\"oe_view_nocontent_create\">\n"
@@ -961,9 +933,6 @@ msgstr ""
 
 #~ msgid "Task"
 #~ msgstr "任务"
-
-#~ msgid "WBS name"
-#~ msgstr "WBS名称"
 
 #~ msgid "Enter"
 #~ msgstr "进入"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-10 10:33+0100\n"
-"PO-Revision-Date: 2016-11-10 10:34+0100\n"
+"POT-Creation-Date: 2017-02-14 07:39+0100\n"
+"PO-Revision-Date: 2017-02-14 07:40+0100\n"
 "Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -21,30 +21,22 @@ msgstr ""
 #: help:project.project,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
 msgstr ""
+"Somma di tutto quello, che potrebbe essere fatturato per questo contratto."
 
 #. module: project_wbs
 #: view:project.project:project_wbs.view_project
-msgid "#555487:account_class == 'phase';#31305C:account_class == 'program'"
+msgid ""
+"#555487:account_class == 'phase';#31305C:account_class == 'program';#807FA2:"
+"account_class == 'deliverable';"
 msgstr ""
+"#555487:account_class == 'phase';#31305C:account_class == 'program';#807FA2:"
+"account_class == 'deliverable';"
 
 #. module: project_wbs
 #: code:addons/project_wbs/models/project_project.py:290
 #, python-format
 msgid "%s"
 msgstr "%s"
-
-#. module: project_wbs
-#: model:ir.actions.act_window,help:project_wbs.open_view_project_projects
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Click to start a new project.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Avvia nuovo progetto.\n"
-"                </p>\n"
-"            "
 
 #. module: project_wbs
 #: model:ir.actions.act_window,help:project_wbs.open_view_project_wbs
@@ -80,20 +72,6 @@ msgstr ""
 "            "
 
 #. module: project_wbs
-#: model:ir.actions.act_window,help:project_wbs.open_view_phases_or_deliverables
-#: model:ir.actions.act_window,help:project_wbs.open_view_project_work_packages
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Click to start a new work package.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                  Avvia nuovo pacco lavori.\n"
-"                </p>\n"
-"            "
-
-#. module: project_wbs
 #: view:project.project:project_wbs.edit_project
 msgid "Administration"
 msgstr "Amministrazione"
@@ -117,11 +95,13 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
+"Basato sui costi avuti sul progetto, cosa sarebbero i ricavati, se tutti "
+"questi costi sarebbero fatturati con il prezzo da listino"
 
 #. module: project_wbs
 #: help:project.project,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Segna questo campo, se questo progetto gestisce orari e presenze"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.view_project
@@ -135,6 +115,7 @@ msgstr "Elementi WBS subordinati"
 #: field:account.analytic.account,account_class:0
 #: view:project.project:project_wbs.edit_project
 #: view:project.project:project_wbs.view_project
+#: view:project.project:project_wbs.view_project_project_filter
 #: field:project.project,account_class:0
 msgid "Class"
 msgstr "Classe"
@@ -161,6 +142,7 @@ msgid ""
 "Computed using the formula: Expected on timesheets - Total invoiced on "
 "timesheets"
 msgstr ""
+"Calcolato usando la formula: previsto su orari - totale fatturato dagli orari"
 
 #. module: project_wbs
 #: help:project.project,real_margin:0
@@ -200,27 +182,22 @@ msgstr "Crea elemento WBS subordinato"
 #. module: project_wbs
 #: field:project.project,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr ""
+msgstr "Data ultimo costo/lavorazione"
 
 #. module: project_wbs
 #: field:project.project,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "Data ultimo costo fatturato"
 
 #. module: project_wbs
 #: field:project.project,recurring_next_date:0
 msgid "Date of Next Invoice"
-msgstr ""
+msgstr "Data prossima fattura"
 
 #. module: project_wbs
 #: help:project.project,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
-
-#. module: project_wbs
-#: field:project.project,location_id:0
-msgid "Default Stock Location"
-msgstr "Località di stoccaggio predefinita"
+msgstr "Data ultima lavorazione su questo conto"
 
 #. module: project_wbs
 #: selection:account.analytic.account,account_class:0
@@ -233,20 +210,10 @@ msgid "Deliverables"
 msgstr "Consegnabili"
 
 #. module: project_wbs
-#: field:project.project,dest_address_id:0
-msgid "Delivery Address"
-msgstr "Indirizzo di consegna"
-
-#. module: project_wbs
-#: help:project.project,dest_address_id:0
-msgid "Delivery address for the current contract /project."
-msgstr "L'indirizzo di consegna del contratto/progetto corrente."
-
-#. module: project_wbs
 #: code:addons/project_wbs/models/form_button.py:20
 #, python-format
 msgid "Details"
-msgstr ""
+msgstr "Dettagli"
 
 #. module: project_wbs
 #: model:ir.actions.act_window,name:project_wbs.open_view_project_form
@@ -262,7 +229,7 @@ msgstr "Data finale"
 #. module: project_wbs
 #: field:project.project,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Stima ore da fatturare"
 
 #. module: project_wbs
 #: help:project.project,remaining_total:0
@@ -275,7 +242,7 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Prezzo fisso"
 
 #. module: project_wbs
 #: field:account.analytic.account,complete_wbs_code:0
@@ -296,16 +263,6 @@ msgstr "Via WBS completa"
 #: help:project.project,complete_wbs_name:0
 msgid "Full path in the WBS hierarchy"
 msgstr "Via completa nella gerarchia WBS"
-
-#. module: project_wbs
-#: view:project.project:project_wbs.view_project_kanban
-msgid "GO DOWN"
-msgstr ""
-
-#. module: project_wbs
-#: view:project.project:project_wbs.view_project_kanban
-msgid "GO UP"
-msgstr ""
 
 #. module: project_wbs
 #: field:project.project,recurring_invoices:0
@@ -340,7 +297,7 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,recurring_invoice_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Righe fattura"
 
 #. module: project_wbs
 #: help:project.project,recurring_rule_type:0
@@ -350,12 +307,12 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,amount_invoiced:0 field:project.project,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Ammontare fatturato"
 
 #. module: project_wbs
 #: field:project.project,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "Tempo fatturato"
 
 #. module: project_wbs
 #: help:project.project,amount_max:0
@@ -365,7 +322,7 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr ""
+msgstr "Data ultima fattura"
 
 #. module: project_wbs
 #: field:account.analytic.account,wbs_indent:0
@@ -374,11 +331,13 @@ msgid "Level"
 msgstr "Livello"
 
 #. module: project_wbs
+#: view:account.analytic.account:project_wbs.view_account_analytic_account_search
 #: view:project.project:project_wbs.view_project_project_filter
 msgid "Master Portfolio"
 msgstr "Portfolio principale"
 
 #. module: project_wbs
+#: view:account.analytic.account:project_wbs.view_account_analytic_account_search
 #: view:project.project:project_wbs.view_project_project_filter
 msgid "Master Program"
 msgstr "Programma principale"
@@ -392,7 +351,7 @@ msgstr "Progetto principale"
 #. module: project_wbs
 #: field:project.project,amount_max:0
 msgid "Max. Invoice Price"
-msgstr ""
+msgstr "Prezzo massimo fatturabile"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
@@ -402,12 +361,7 @@ msgstr "Miscellaneo"
 #. module: project_wbs
 #: field:project.project,month_ids:0
 msgid "Month"
-msgstr ""
-
-#. module: project_wbs
-#: field:project.project,move_ids:0
-msgid "Moves for this analytic account"
-msgstr ""
+msgstr "Mese"
 
 #. module: project_wbs
 #: help:project.project,hours_qtt_non_invoiced:0
@@ -415,6 +369,8 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
+"Quantità di tempo (ore/giorni) (dal giornale di tipo 'generico') che si può "
+"fatturare, se se fattura in base al conto analitico"
 
 #. module: project_wbs
 #: help:project.project,hours_qtt_invoiced:0
@@ -422,6 +378,7 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
+"Quantita di tempo (ore/giorni) che si può fatturare più quello già fatturato."
 
 #. module: project_wbs
 #: help:project.project,hours_quantity:0
@@ -432,8 +389,9 @@ msgstr ""
 
 #. module: project_wbs
 #: field:project.project,invoice_on_timesheets:0
+#, fuzzy
 msgid "On Timesheets"
-msgstr ""
+msgstr "Segna questo campo, se questo progetto gestisce orari e presenze"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
@@ -447,7 +405,6 @@ msgstr ""
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
-#: view:project.project:project_wbs.view_project
 msgid "Parent"
 msgstr "Genitore"
 
@@ -462,38 +419,30 @@ msgid "Phase"
 msgstr "Fase"
 
 #. module: project_wbs
-#: model:ir.ui.menu,name:project_wbs.menu_wbs_phases_or_deliverables
-msgid "Phases and Deliverables"
-msgstr "Fasi e consegnabili"
-
-#. module: project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_phases_or_deliverables
-msgid "Phases or Deliverables"
-msgstr "Fasi o consegnabili"
-
-#. module: project_wbs
 #: selection:account.analytic.account,account_class:0
 #: field:account.analytic.account,portfolio_analytic_account_id:0
 #: field:project.project,portfolio_analytic_account_id:0
 msgid "Portfolio"
-msgstr ""
+msgstr "Portafoglio"
 
 #. module: project_wbs
+#: model:ir.actions.act_window,name:project_wbs.group_portfolio
+#: model:ir.actions.act_window,name:project_wbs.group_program
 #: model:ir.ui.menu,name:project_wbs.menu_project_wbs_portfolio
 msgid "Portfolios"
-msgstr ""
+msgstr "Portafogli\t"
 
 #. module: project_wbs
 #: field:project.project,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Listino prezzi"
 
 #. module: project_wbs
 #: selection:account.analytic.account,account_class:0
 #: field:account.analytic.account,program_analytic_account_id:0
 #: field:project.project,program_analytic_account_id:0
 msgid "Program"
-msgstr ""
+msgstr "Programma"
 
 #. module: project_wbs
 #: model:ir.ui.menu,name:project_wbs.menu_project_wbs_program
@@ -533,8 +482,9 @@ msgstr "Configurazione progetto"
 
 #. module: project_wbs
 #: code:addons/project_wbs/models/project_project.py:335
-#: model:ir.actions.act_window,name:project_wbs.open_view_project_projects
-#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_projects
+#: model:ir.actions.act_window,name:project_wbs.group_project
+#: model:ir.actions.act_window,name:project_wbs.group_subproject
+#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_project
 #, python-format
 msgid "Projects"
 msgstr "Progetti"
@@ -583,6 +533,11 @@ msgid "Revenue per Time (real)"
 msgstr ""
 
 #. module: project_wbs
+#: view:project.project:project_wbs.edit_project
+msgid "Root Analytic Accounts"
+msgstr "Radici analitiche"
+
+#. module: project_wbs
 #: help:account.analytic.account,portfolio_analytic_account_id:0
 #: help:project.project,portfolio_analytic_account_id:0
 msgid "Root Portfolio in the WBS hierarchy"
@@ -613,10 +568,9 @@ msgid "Start Date"
 msgstr "Data d'inizio"
 
 #. module: project_wbs
-#: help:project.project,use_reserved_stock:0
-msgid ""
-"Stock with reference to this analytic account is considered to be reserved."
-msgstr ""
+#: model:ir.ui.menu,name:project_wbs.menu_project_wbs_subproject
+msgid "Sub-projects"
+msgstr "Sotto-progetto\t"
 
 #. module: project_wbs
 #: help:project.project,fix_price_to_invoice:0
@@ -658,7 +612,7 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "Margine teorico"
 
 #. module: project_wbs
 #: field:project.project,ca_theorical:0
@@ -672,8 +626,9 @@ msgstr ""
 
 #. module: project_wbs
 #: field:project.project,use_timesheets:0
+#, fuzzy
 msgid "Timesheets"
-msgstr ""
+msgstr "Segna questo campo, se questo progetto gestisce orari e presenze"
 
 #. module: project_wbs
 #: field:project.project,total_cost:0
@@ -688,17 +643,17 @@ msgstr "Totale stima"
 #. module: project_wbs
 #: field:project.project,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Totale fatturato"
 
 #. module: project_wbs
 #: field:project.project,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Rimanente totale"
 
 #. module: project_wbs
 #: field:project.project,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Totale tempo lavorato"
 
 #. module: project_wbs
 #: help:project.project,ca_invoiced:0
@@ -708,7 +663,7 @@ msgstr ""
 #. module: project_wbs
 #: help:project.project,amount_invoiced:0
 msgid "Total invoiced"
-msgstr ""
+msgstr "Totale fatturato"
 
 #. module: project_wbs
 #: help:project.project,total_cost:0
@@ -720,7 +675,7 @@ msgstr ""
 #. module: project_wbs
 #: field:project.project,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Totale da fatturare"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
@@ -730,17 +685,12 @@ msgstr "Vero"
 #. module: project_wbs
 #: field:project.project,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr ""
+msgstr "Ammontare non fatturato"
 
 #. module: project_wbs
 #: field:project.project,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
-
-#. module: project_wbs
-#: field:project.project,use_reserved_stock:0
-msgid "Use reserved stock"
-msgstr ""
+msgstr "Tempo non fatturato"
 
 #. module: project_wbs
 #: field:project.project,user_ids:0
@@ -767,18 +717,20 @@ msgstr "Nome elemento WBS"
 
 #. module: project_wbs
 #: model:ir.actions.act_window,name:project_wbs.create_wbs_element
-#: model:ir.actions.act_window,name:project_wbs.group_portfolio
-#: model:ir.actions.act_window,name:project_wbs.group_program
 #: model:ir.actions.act_window,name:project_wbs.open_view_project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_tree
-#: model:ir.actions.act_window,name:project_wbs.open_wbs_grouped
 msgid "WBS elements"
 msgstr "Elementi WBS"
 
 #. module: project_wbs
-#: field:project.project,warehouse_id:0
-msgid "Warehouse"
-msgstr "Magazzino"
+#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_kanban
+msgid "WBS kanban"
+msgstr "WBS kanban"
+
+#. module: project_wbs
+#: model:ir.actions.act_window,name:project_wbs.open_view_wbs_tree
+#: model:ir.ui.menu,name:project_wbs.menu_fullwbs
+msgid "WBS overview"
+msgstr "Struttura progetti"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.edit_project
@@ -789,12 +741,6 @@ msgstr "Articolazione progetti (WBS)"
 #: selection:account.analytic.account,account_class:0
 msgid "Work Package"
 msgstr "Pacco lavori"
-
-#. module: project_wbs
-#: model:ir.actions.act_window,name:project_wbs.open_view_project_work_packages
-#: model:ir.ui.menu,name:project_wbs.menu_project_work_packages
-msgid "Work Packages"
-msgstr "Pacchi lavori"
 
 #. module: project_wbs
 #: help:project.project,to_invoice:0
@@ -809,9 +755,12 @@ msgstr ""
 #: view:project.project:project_wbs.view_project
 msgid ""
 "bold:account_class in 'portfolio';bold:account_class in 'program';bold:"
-"account_class in 'project';bold:account_class in 'phase'; italic:state in "
-"'cancelled'"
+"account_class in 'project';bold:account_class in 'phase';bold:account_class "
+"in 'deliverable';italic:state in 'cancelled'"
 msgstr ""
+"bold:account_class in 'portfolio';bold:account_class in 'program';bold:"
+"account_class in 'project';bold:account_class in 'phase';bold:account_class "
+"in 'deliverable';italic:state in 'cancelled'"
 
 #. module: project_wbs
 #: view:project.project:project_wbs.view_project
@@ -839,6 +788,52 @@ msgstr "on_change_parent(parent_id)"
 #: view:project.project:project_wbs.view_project
 msgid "top"
 msgstr ""
+
+#~ msgid "Full WBS"
+#~ msgstr "WBS completa"
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Click to start a new project.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Avvia nuovo progetto.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Click to start a new work package.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p class=\"oe_view_nocontent_create\">\n"
+#~ "                  Avvia nuovo pacco lavori.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid "Default Stock Location"
+#~ msgstr "Località di stoccaggio predefinita"
+
+#~ msgid "Delivery Address"
+#~ msgstr "Indirizzo di consegna"
+
+#~ msgid "Delivery address for the current contract /project."
+#~ msgstr "L'indirizzo di consegna del contratto/progetto corrente."
+
+#~ msgid "Phases and Deliverables"
+#~ msgstr "Fasi e consegnabili"
+
+#~ msgid "Phases or Deliverables"
+#~ msgstr "Fasi o consegnabili"
+
+#~ msgid "Warehouse"
+#~ msgstr "Magazzino"
+
+#~ msgid "Work Packages"
+#~ msgstr "Pacchi lavori"
 
 #~ msgid ""
 #~ "<p class=\"oe_view_nocontent_create\">\n"
@@ -946,9 +941,6 @@ msgstr ""
 #~ msgid "Folded by Default"
 #~ msgstr "Predefinito come piegato"
 
-#~ msgid "Full WBS"
-#~ msgstr "WBS completa"
-
 #~ msgid "ID"
 #~ msgstr "ID"
 
@@ -1035,9 +1027,6 @@ msgstr ""
 
 #~ msgid "Task"
 #~ msgstr "Attività"
-
-#~ msgid "WBS name"
-#~ msgstr "Nome WBS"
 
 #~ msgid "Current stage:"
 #~ msgstr "Stadio corrente"

@@ -57,38 +57,38 @@ class Project(osv.osv):
             result.extend(ppid.keys())
         return result
 
-    def name_get(self, cr, uid, ids, context=None):
-
-        if not ids:
-            return []
-        if type(ids) is int:
-            ids = [ids]
-        res = []
-
-        new_list = []
-        for i in ids:
-            if i not in new_list:
-                new_list.append(i)
-        ids = new_list
-
-        for project_item in self.browse(cr, uid, ids, context=context):
-            data = []
-            proj = project_item
-
-            while proj:
-                if proj and proj.name:
-                    data.insert(0, proj.name)
-                else:
-                    data.insert(0, '')
-
-                proj = proj.parent_id
-            data = '/'.join(data)
-            res2 = self.code_get(cr, uid, [project_item.id], context=None)
-            if res2:
-                data = '[' + res2[0][1] + '] ' + data
-
-            res.append((project_item.id, data))
-        return res
+    # def name_get(self, cr, uid, ids, context=None):
+    #
+    #     if not ids:
+    #         return []
+    #     if type(ids) is int:
+    #         ids = [ids]
+    #     res = []
+    #
+    #     new_list = []
+    #     for i in ids:
+    #         if i not in new_list:
+    #             new_list.append(i)
+    #     ids = new_list
+    #
+    #     for project_item in self.browse(cr, uid, ids, context=context):
+    #         data = []
+    #         proj = project_item
+    #
+    #         while proj:
+    #             if proj and proj.name:
+    #                 data.insert(0, proj.name)
+    #             else:
+    #                 data.insert(0, '')
+    #
+    #             proj = proj.parent_id
+    #         data = '/'.join(data)
+    #         res2 = self.code_get(cr, uid, [project_item.id], context=None)
+    #         if res2:
+    #             data = '[' + res2[0][1] + '] ' + data
+    #
+    #         res.append((project_item.id, data))
+    #     return res
 
     def code_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -189,8 +189,9 @@ class Project(osv.osv):
         for project in self.browse(
                 cr, uid, ids, context=context
         ):
-            result[project.id] = \
+            result[project.id] = (
                 project.analytic_account_id.complete_wbs_code_calc
+            )
 
         return result
 
@@ -259,8 +260,7 @@ class Project(osv.osv):
         return self.name_get(cr, uid, project, context=context)
 
     # Override the standard behaviour of duplicate_template not introducing
-    # the (copy) string
-    # to the copied projects.
+    # the (copy) string to the copied projects.
     def duplicate_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -444,7 +444,17 @@ class Project(osv.osv):
 
         return self.action_openChildView(
             cr, uid, ids, 'project_wbs',
-            'open_view_wbs_tree',
+            'open_view_project_wbs',
+            context=context
+        )
+
+    def action_openChildKanbanView(
+            self, cr, uid, ids, context=None
+    ):
+
+        return self.action_openChildView(
+            cr, uid, ids, 'project_wbs',
+            'open_view_wbs_kanban',
             context=context
         )
 
@@ -458,7 +468,7 @@ class Project(osv.osv):
             context = {}
         project = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(
-            cr, uid, 'project_wbs', 'open_view_wbs_tree', context
+            cr, uid, 'project_wbs', 'open_view_project_wbs', context
         )
         if project.parent_id:
             for parent_project_id in self.pool.get('project.project').search(
@@ -476,3 +486,25 @@ class Project(osv.osv):
         return self.pool.get('account.analytic.account').on_change_parent(
             cr, uid, ids, parent_id
         )
+
+    def action_openParentKanbanView(
+            self, cr, uid, ids, context=None
+    ):
+        """
+        :return dict: dictionary value for created view
+        """
+        if context is None:
+            context = {}
+        project = self.browse(cr, uid, ids[0], context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(
+            cr, uid, 'project_wbs', 'open_view_wbs_kanban', context
+        )
+        if project.parent_id:
+            for parent_project_id in self.pool.get('project.project').search(
+                    cr, uid,
+                    [('analytic_account_id', '=', project.parent_id.id)]
+            ):
+                res['domain'] = "[('id','='," + str(parent_project_id) + ")]"
+
+        res['nodestroy'] = False
+        return res
