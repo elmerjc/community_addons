@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<openerp>
-    <data noupdate="1">
-
-        <function model="project.task.type" name="_init_fold_statusbar" />
-
-    </data>
-</openerp>
