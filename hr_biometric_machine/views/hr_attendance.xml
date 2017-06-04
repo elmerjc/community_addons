@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="hr_attendace_tree_view" model="ir.ui.view">
+            <field name="name">hr.attendace.tree.view</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="fixme" invisible="1"/>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="colors">red:fixme==True;</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_attendace_form_view" model="ir.ui.view">
+            <field name="name">hr.attendace.form.view</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='action_desc']" position="after">
+                    <field name="fixme"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
