@@ -12,12 +12,12 @@ class HrContract(models.Model):
 
     # ---------- Fields management
     commission = fields.Float(string='Commission',
-                              compute='_comp_commission')
+                              compute='_comp_commission', store=True)
     comm_rate = fields.Float(string='Commissions Rate',
-                             digits=dp.get_precision('Payroll Rate'))
+                             digits=dp.get_precision('Payroll Rate'), store=True)
 
     @api.multi
-    @api.depends('employee_id.user_id')
+    @api.depends('employee_id','employee_id.payslip_count')
     def _comp_commission(self):
         for contract in self:
             contract.commission = 0
